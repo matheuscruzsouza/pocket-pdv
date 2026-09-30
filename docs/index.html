@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PocketPDV - Ponto de Venda Híbrido de Alta Performance</title>
+  <meta name="description" content="Sistema completo de PDV híbrido com servidor local nano-spring, interface nativa Android e PDV web reativo para hardware legado.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo">
+        ⚡ Pocket<span>PDV</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#recursos">Recursos</a></li>
+        <li><a href="#galeria">Telas</a></li>
+        <li><a href="#arquitetura">Arquitetura</a></li>
+        <li><a href="#api">API & SSE</a></li>
+        <li><a href="#instalacao">Instalação</a></li>
+      </ul>
+      <a href="https://github.com/matheuscruzsouza" target="_blank" class="btn-github">
+        <svg height="18" width="18" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+        </svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-container">
+      <div class="badge-pill">🚀 Plataforma Híbrida Android + nano-spring</div>
+      <h1>Ponto de Venda de Alto Desempenho para <span>Hardware Legado</span></h1>
+      <p>
+        O PocketPDV transforma smartphones antigos em servidores de PDV autônomos.
+        Executa servidor HTTP e stream SSE local embarcado em segundo plano, com interface nativa e terminal web sem necessidade de nuvem.
+      </p>
+      <div class="hero-cta">
+        <a href="#instalacao" class="btn-primary">Iniciar Agora</a>
+        <a href="#arquitetura" class="btn-secondary">Explorar Arquitetura</a>
+      </div>
+
+      <div class="metrics-strip">
+        <div class="metric-item">
+          <div class="metric-value">&lt; 40 MB</div>
+          <div class="metric-label">Consumo de Memória (PSS)</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-value">&lt; 300 ms</div>
+          <div class="metric-label">Boot do Servidor nano-spring</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-value">100% Offline</div>
+          <div class="metric-label">Operação em Rede Local Wi-Fi</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-value">Zero Overhead</div>
+          <div class="metric-label">SQLite WAL Integrado</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="recursos">
+    <div class="section-container">
+      <div class="section-header">
+        <h2>Recursos Poderosos & Otimizados</h2>
+        <p>Projetado com foco em resiliência, baixa latência e consumo mínimo de energia.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🧭</div>
+          <h3>Bottom Navigation Nativa</h3>
+          <p>Barra inferior com ícones vetoriais modernos para acesso rápido às abas: Vendas, Equipe, Relatórios e Servidor.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔑</div>
+          <h3>Código de Confirmação & 1º Acesso</h3>
+          <p>Cadastro de operadores com geração automática de código alfanumérico de 6 dígitos para definição segura de senha no primeiro login web.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📦</div>
+          <h3>Gestão de Estoque Reativa</h3>
+          <p>Ajuste de quantidades e cadastro de novos itens com estoque mínimo através de modal HTMX leve e direto na interface web.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Atualização em Tempo Real (SSE)</h3>
+          <p>Server-Sent Events via EstoqueSseHub que sincroniza alterações de estoque em tempo real em todas as telas web conectadas.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Relatórios & Exportação CSV</h3>
+          <p>Métricas consolidadas, ranking de colaboradores e exportação instantânea do histórico completo para a pasta <code>/sdcard/PocketPDV/</code>.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🌐</div>
+          <h3>mDNS & Descoberta Local</h3>
+          <p>Acesse o PDV pelo navegador em qualquer dispositivo na mesma rede pelo endereço amigável <code>http://pocketpdv.local:8080</code>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Section -->
+  <section id="galeria" class="gallery-section">
+    <div class="section-container">
+      <div class="section-header">
+        <h2>Experiência Visual no Moto G4 Play</h2>
+        <p>Capturas reais do aplicativo executando em Android 7.1.1 (API 25) com consumo estrito de recursos.</p>
+      </div>
+
+      <div class="gallery-grid">
+        <div class="device-frame">
+          <img src="assets/screen_equipe_lista.png" alt="Bottom Navigation e Equipe">
+          <div class="device-caption">Bottom Navigation & Gestão de Equipe</div>
+        </div>
+
+        <div class="device-frame">
+          <img src="assets/screen_codigo_popup.png" alt="Popup de Código de 6 Dígitos">
+          <div class="device-caption">Código de Confirmação (1º Acesso)</div>
+        </div>
+
+        <div class="device-frame">
+          <img src="assets/screen_relatorios_clean.png" alt="Relatórios Consolidados">
+          <div class="device-caption">Relatórios & Ranking de Vendas</div>
+        </div>
+
+        <div class="device-frame">
+          <img src="assets/screen_csv_saved_dialog.png" alt="Exportação CSV Concluída">
+          <div class="device-caption">Exportação CSV em /sdcard/PocketPDV</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture Section -->
+  <section id="arquitetura">
+    <div class="section-container">
+      <div class="section-header">
+        <h2>Arquitetura Híbrida & Engenharia</h2>
+        <p>Integração harmoniosa entre serviços em segundo plano, injeção de dependência e persistência concorrente.</p>
+      </div>
+
+      <div class="arch-card">
+        <h3>Invariantes do Sistema</h3>
+        <div class="arch-grid">
+          <div class="arch-box">
+            <h4>nano-spring Engine</h4>
+            <p>Contêiner IoC minimalista embarcado com injeção de dependências em tempo de compilação/inicialização rápida, sem reflexão pesada.</p>
+          </div>
+          <div class="arch-box">
+            <h4>ForegroundService</h4>
+            <p>Servidor HTTP rodando na porta 8080 mantido ativo pelo Android com notificação permanente e controle inteligente de WakeLock.</p>
+          </div>
+          <div class="arch-box">
+            <h4>SQLite WAL Mode</h4>
+            <p>O modo Write-Ahead Logging permite que leituras das requisições web e da interface nativa ocorram concorrentemente sem travar gravações.</p>
+          </div>
+          <div class="arch-box">
+            <h4>Zero-Loopback Overhead</h4>
+            <p>A UI nativa Android acessa os repositórios diretamente pelo contexto em memória, economizando CPU, bateria e ciclos de rede.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- API Section -->
+  <section id="api" style="background: white;">
+    <div class="section-container">
+      <div class="section-header">
+        <h2>Catálogo de Rotas & Endpoints</h2>
+        <p>Endpoints HTTP e streams SSE fornecidos pelo servidor local embarcado.</p>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Método</th>
+              <th>Rota</th>
+              <th>Descrição</th>
+              <th>Formato</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/login</code></td>
+              <td>Página de login do operador de caixa</td>
+              <td>HTML</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-post">POST</span></td>
+              <td><code>/primeiro-acesso</code></td>
+              <td>Validação do código de 6 dígitos e definição da senha</td>
+              <td>HTML / Form</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/pdv</code></td>
+              <td>Interface completa do PDV web com catálogo e carrinho</td>
+              <td>HTML / HTMX</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-post">POST</span></td>
+              <td><code>/pdv/checkout</code></td>
+              <td>Finalização da venda, baixa no estoque e disparo de eventos SSE</td>
+              <td>HTMX Fragment</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-post">POST</span></td>
+              <td><code>/pdv/estoque/ajuste</code></td>
+              <td>Ajuste imediato de quantidade em estoque</td>
+              <td>HTMX Fragment</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/pdv/eventos/estoque</code></td>
+              <td>Stream SSE contínuo de atualizações de estoque</td>
+              <td>text/event-stream</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-get">GET</span></td>
+              <td><code>/api/status</code></td>
+              <td>Telemetria e diagnóstico do servidor</td>
+              <td>JSON</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quickstart / Installation -->
+  <section id="instalacao">
+    <div class="section-container">
+      <div class="section-header">
+        <h2>Compilação & Instalação</h2>
+        <p>Instruções para compilar e executar o PocketPDV via linha de comando ou Android Studio.</p>
+      </div>
+
+      <div class="feature-card" style="max-width: 800px; margin: 0 auto;">
+        <h3>1. Compilar com Gradle</h3>
+        <p>Execute no terminal com JDK 17 configurado:</p>
+        <div class="code-block">./gradlew assembleDebug</div>
+
+        <h3 style="margin-top: 1.5rem;">2. Instalar no Dispositivo via ADB</h3>
+        <p>Com a depuração USB ativa no smartphone:</p>
+        <div class="code-block">adb install -r app/build/outputs/apk/debug/app-debug.apk</div>
+
+        <h3 style="margin-top: 1.5rem;">3. Iniciar o Aplicativo</h3>
+        <div class="code-block">adb shell am start -n com.github.matheuscruzsouza.pocketpdv/.ui.MainActivity</div>
+
+        <h3 style="margin-top: 1.5rem;">4. Acessar a Interface Web</h3>
+        <p>No navegador de qualquer aparelho na mesma rede Wi-Fi, abra:</p>
+        <div class="code-block">http://pocketpdv.local:8080</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="section-container">
+      <p style="margin-bottom: 0.5rem; font-weight: 600; color: #f1f5f9;">PocketPDV — Sistema de Ponto de Venda Híbrido</p>
+      <p style="font-size: 0.9rem;">Desenvolvido com o framework <a href="https://github.com/matheuscruzsouza/nano-spring" target="_blank">nano-spring</a>. Licença MIT.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

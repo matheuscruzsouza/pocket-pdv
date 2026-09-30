@@ -1,0 +1,70 @@
+[
+    {
+        "merged": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-merged_res-31:/drawable_btn_primary_bg.xml.flat",
+        "source": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-main-33:/drawable/btn_primary_bg.xml"
+    },
+    {
+        "merged": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-merged_res-31:/layout_dialog_novo_funcionario.xml.flat",
+        "source": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-main-33:/layout/dialog_novo_funcionario.xml"
+    },
+    {
+        "merged": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-merged_res-31:/layout_item_relatorio_funcionario.xml.flat",
+        "source": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-main-33:/layout/item_relatorio_funcionario.xml"
+    },
+    {
+        "merged": "com.github.matheuscruzsouza.pocketpdv.app-merged_res-31:/drawable_ic_tab_relatorios.xml.flat",
+        "source": "com.github.matheuscruzsouza.pocketpdv.app-main-33:/drawable/ic_tab_relatorios.xml"
+    },
+    {
+        "merged": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-merged_res-31:/drawable_badge_warning.xml.flat",
+        "source": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-main-33:/drawable/badge_warning.xml"
+    },
+    {
+        "merged": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-merged_res-31:/drawable_tab_button_bg.xml.flat",
+        "source": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-main-33:/drawable/tab_button_bg.xml"
+    },
+    {
+        "merged": "com.github.matheuscruzsouza.pocketpdv.app-merged_res-31:/layout_activity_main.xml.flat",
+        "source": "com.github.matheuscruzsouza.pocketpdv.app-main-33:/layout/activity_main.xml"
+    },
+    {
+        "merged": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-merged_res-31:/drawable_badge_success.xml.flat",
+        "source": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-main-33:/drawable/badge_success.xml"
+    },
+    {
+        "merged": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-merged_res-31:/xml_file_paths.xml.flat",
+        "source": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-main-33:/xml/file_paths.xml"
+    },
+    {
+        "merged": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-merged_res-31:/layout_item_funcionario.xml.flat",
+        "source": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-main-33:/layout/item_funcionario.xml"
+    },
+    {
+        "merged": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-merged_res-31:/drawable_card_background.xml.flat",
+        "source": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-main-33:/drawable/card_background.xml"
+    },
+    {
+        "merged": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-merged_res-31:/layout_item_relatorio_venda.xml.flat",
+        "source": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-main-33:/layout/item_relatorio_venda.xml"
+    },
+    {
+        "merged": "com.github.matheuscruzsouza.pocketpdv.app-merged_res-31:/drawable_ic_tab_servidor.xml.flat",
+        "source": "com.github.matheuscruzsouza.pocketpdv.app-main-33:/drawable/ic_tab_servidor.xml"
+    },
+    {
+        "merged": "com.github.matheuscruzsouza.pocketpdv.app-merged_res-31:/drawable_ic_tab_equipe.xml.flat",
+        "source": "com.github.matheuscruzsouza.pocketpdv.app-main-33:/drawable/ic_tab_equipe.xml"
+    },
+    {
+        "merged": "com.github.matheuscruzsouza.pocketpdv.app-merged_res-31:/drawable_ic_tab_vendas.xml.flat",
+        "source": "com.github.matheuscruzsouza.pocketpdv.app-main-33:/drawable/ic_tab_vendas.xml"
+    },
+    {
+        "merged": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-merged_res-31:/layout_activity_main.xml.flat",
+        "source": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-main-33:/layout/activity_main.xml"
+    },
+    {
+        "merged": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-merged_res-31:/layout_item_venda_recente.xml.flat",
+        "source": "/home/Matheus/.gradle/daemon/8.6/com.github.matheuscruzsouza.pocketpdv.app-main-33:/layout/item_venda_recente.xml"
+    }
+]
