@@ -48,48 +48,33 @@ O aplicativo combina um **servidor web HTTP/SSE local embarcado** gerenciado via
 ## 🏗️ Arquitetura do Sistema
 
 ```mermaid
-flowchart TB
-    subgraph Dispositivo ["Smartphone Android (Ex: Moto G4 Play)"]
-        subgraph AppProcess ["Processo Único do Aplicativo (PocketPDV)"]
-            Service["PocketPdvService (ForegroundService)<br/>Notificação Persistente & WakeLock"]
-            
-            subgraph Engine ["nano-spring Framework (IoC & Web Router)"]
-                Context["ApplicationContext (Singletons, IoC)"]
-                Router["Router HTTP / Web Controller"]
-                SSE["EstoqueSseHub (CopyOnWriteArrayList<SseEmitter>)"]
-            end
-            
-            subgraph Persistence ["Camada de Persistência SQLite"]
-                DB["DatabaseHelper (SQLiteOpenHelper)"]
-                WAL["PRAGMA journal_mode = WAL<br/>PRAGMA synchronous = NORMAL"]
-                Repos["ProdutoRepository | VendaRepository | FuncionarioRepository"]
-            end
-            
-            subgraph NativeUI ["Interface Nativa Android"]
-                MainActivity["MainActivity (Bottom Navigation)"]
-                Tabs["Tabs: Vendas | Equipe | Relatórios | Servidor"]
-                CSV["Exportador CSV (/sdcard/PocketPDV)"]
-            end
-        end
+flowchart TD
+    subgraph AndroidApp ["PocketPDV (Processo Único Android)"]
+        Service["PocketPdvService (ForegroundService)"]
+        Context["nano-spring IoC Container"]
+        Router["Router HTTP / Web Controller"]
+        SSE["EstoqueSseHub (SSE Stream)"]
+        Repos["Repositórios (Produto, Venda, Funcionario)"]
+        DB[("SQLite Database (Modo WAL)")]
+        UI["Interface Nativa (Bottom Navigation)"]
     end
 
-    subgraph RedeLocal ["Rede Wi-Fi Local (mDNS: pocketpdv.local:8080)"]
-        Terminal1["Tablet / PC (Navegador Web)"]
-        Terminal2["Smart POS / Smartphone (Navegador Web)"]
+    subgraph RedeLocal ["Dispositivos na Rede Wi-Fi (pocketpdv.local:8080)"]
+        WebPC["Tablet / PC (Navegador Web)"]
+        WebMobile["Smart POS / Smartphone"]
     end
 
     Service --> Context
     Context --> Router
     Router --> Repos
     Repos --> DB
-    DB --> WAL
 
-    NativeUI -.->|Acesso Direto ao DI Context<br/>Zero Overhead HTTP| Repos
+    UI -->|Injeção Direta em Memória| Repos
 
-    Terminal1 -->|HTTP / HTMX| Router
-    Terminal2 -->|HTTP / HTMX| Router
-    SSE -->|SSE Events / Stream| Terminal1
-    SSE -->|SSE Events / Stream| Terminal2
+    WebPC -->|HTTP / HTMX| Router
+    WebMobile -->|HTTP / HTMX| Router
+    SSE -.->|Sincronização em Tempo Real| WebPC
+    SSE -.->|Sincronização em Tempo Real| WebMobile
 ```
 
 ### Invariantes e Diretrizes Arquiteturais
