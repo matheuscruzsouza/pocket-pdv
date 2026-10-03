@@ -96,7 +96,14 @@ public class AuthController {
             return HtmlTemplates.paginaLogin("Primeiro acesso pendente! Por favor, utilize o botão 'Primeiro Acesso' com o código fornecido.", null);
         }
 
-        if (f.getSenha() != null && f.getSenha().equals(senha.trim())) {
+        if (com.github.matheuscruzsouza.pocketpdv.security.PasswordHasher.checkPassword(senha.trim(), f.getSenha())) {
+            // Migração transparente: se a senha for legada, atualiza para PBKDF2 com salt no banco
+            if (com.github.matheuscruzsouza.pocketpdv.security.PasswordHasher.needsRehash(f.getSenha())) {
+                String novoHash = com.github.matheuscruzsouza.pocketpdv.security.PasswordHasher.hashPassword(senha.trim());
+                repo.atualizarSenha(f.getId(), novoHash);
+                f.setSenha(novoHash);
+            }
+
             Session session = getSessionService().criarSessao(f);
             String token = session != null ? session.getId() : "";
 

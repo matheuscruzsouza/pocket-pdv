@@ -98,13 +98,25 @@ public class FuncionarioRepository {
             return false;
         }
 
+        String hash = com.github.matheuscruzsouza.pocketpdv.security.PasswordHasher.hashPassword(novaSenha.trim());
+
         SQLiteDatabase db = getWritableDb();
         ContentValues cv = new ContentValues();
-        cv.put("senha", novaSenha.trim());
+        cv.put("senha", hash);
         cv.put("senha_definida", 1);
         cv.putNull("codigo_confirmacao");
 
         int rows = db.update("funcionarios", cv, "id = ?", new String[]{String.valueOf(f.getId())});
+        return rows > 0;
+    }
+
+    public boolean atualizarSenha(long id, String novoHash) {
+        if (id <= 0 || novoHash == null || novoHash.trim().isEmpty()) return false;
+        SQLiteDatabase db = getWritableDb();
+        ContentValues cv = new ContentValues();
+        cv.put("senha", novoHash.trim());
+        cv.put("senha_definida", 1);
+        int rows = db.update("funcionarios", cv, "id = ?", new String[]{String.valueOf(id)});
         return rows > 0;
     }
 
@@ -126,7 +138,13 @@ public class FuncionarioRepository {
         cv.put("usuario", f.getUsuario());
         cv.put("ativo", f.isAtivo() ? 1 : 0);
         cv.put("codigo_confirmacao", f.getCodigoConfirmacao());
-        cv.put("senha", f.getSenha());
+
+        String senha = f.getSenha();
+        if (senha != null && !senha.trim().isEmpty() && com.github.matheuscruzsouza.pocketpdv.security.PasswordHasher.needsRehash(senha)) {
+            senha = com.github.matheuscruzsouza.pocketpdv.security.PasswordHasher.hashPassword(senha.trim());
+            f.setSenha(senha);
+        }
+        cv.put("senha", senha);
         cv.put("senha_definida", f.isSenhaDefinida() ? 1 : 0);
 
         if (f.getId() > 0) {

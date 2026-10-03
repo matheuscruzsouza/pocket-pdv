@@ -96,13 +96,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL("ALTER TABLE funcionarios ADD COLUMN senha_definida INTEGER DEFAULT 0;");
         } catch (Exception ignored) {}
 
-        // Usuários padrão com senha definida
-        db.execSQL("INSERT OR IGNORE INTO funcionarios (nome, cargo, usuario, ativo, senha, senha_definida) " +
-                "VALUES ('Carlos Silva', 'Operador de Caixa', 'operador', 1, '1234', 1);");
-        db.execSQL("INSERT OR IGNORE INTO funcionarios (nome, cargo, usuario, ativo, senha, senha_definida) " +
-                "VALUES ('Mariana Costa', 'Gerente de Loja', 'admin', 1, 'admin', 1);");
-        db.execSQL("UPDATE funcionarios SET senha = '1234', senha_definida = 1 WHERE usuario = 'operador' AND (senha IS NULL OR senha = '');");
-        db.execSQL("UPDATE funcionarios SET senha = 'admin', senha_definida = 1 WHERE usuario = 'admin' AND (senha IS NULL OR senha = '');");
+        // Usuários padrão com senha segura em hash PBKDF2
+        String hashOperador = com.github.matheuscruzsouza.pocketpdv.security.PasswordHasher.hashPassword("1234");
+        String hashAdmin = com.github.matheuscruzsouza.pocketpdv.security.PasswordHasher.hashPassword("admin");
+        android.content.ContentValues cvOp = new android.content.ContentValues();
+        cvOp.put("nome", "Carlos Silva");
+        cvOp.put("cargo", "Operador de Caixa");
+        cvOp.put("usuario", "operador");
+        cvOp.put("ativo", 1);
+        cvOp.put("senha", hashOperador);
+        cvOp.put("senha_definida", 1);
+        db.insertWithOnConflict("funcionarios", null, cvOp, SQLiteDatabase.CONFLICT_IGNORE);
+
+        android.content.ContentValues cvAdmin = new android.content.ContentValues();
+        cvAdmin.put("nome", "Mariana Costa");
+        cvAdmin.put("cargo", "Gerente de Loja");
+        cvAdmin.put("usuario", "admin");
+        cvAdmin.put("ativo", 1);
+        cvAdmin.put("senha", hashAdmin);
+        cvAdmin.put("senha_definida", 1);
+        db.insertWithOnConflict("funcionarios", null, cvAdmin, SQLiteDatabase.CONFLICT_IGNORE);
 
         // Migração suave de coluna funcionario_id se ainda não existir
         try {
