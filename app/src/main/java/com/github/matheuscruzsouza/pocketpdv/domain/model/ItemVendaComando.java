@@ -1,9 +1,16 @@
 package com.github.matheuscruzsouza.pocketpdv.domain.model;
 
+import com.github.matheuscruzsouza.nanospring.validation.Min;
+
 public class ItemVendaComando {
 
+    @Min(value = 1, message = "O ID do produto deve ser maior que zero")
     private final long produtoId;
+
+    @Min(value = 1, message = "A quantidade deve ser de no mínimo 1 unidade")
     private final int quantidade;
+
+    @Min(value = 0, message = "O preço não pode ser negativo")
     private final int precoUnitCentavos;
 
     public ItemVendaComando(long produtoId, int quantidade) {

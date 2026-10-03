@@ -115,6 +115,16 @@ public class ProdutoRepository {
         return rowsAffected > 0;
     }
 
+    public boolean incrementarEstoque(long produtoId, int quantidade, SQLiteDatabase dbExterno) {
+        SQLiteDatabase db = (dbExterno != null) ? dbExterno : getWritableDb();
+        String sql = "UPDATE produtos SET estoque = estoque + ? WHERE id = ?";
+        android.database.sqlite.SQLiteStatement stmt = db.compileStatement(sql);
+        stmt.bindLong(1, quantidade);
+        stmt.bindLong(2, produtoId);
+        int rowsAffected = stmt.executeUpdateDelete();
+        return rowsAffected > 0;
+    }
+
     public boolean ajustarEstoque(long produtoId, int novoEstoque) {
         if (novoEstoque < 0) novoEstoque = 0;
         SQLiteDatabase db = getWritableDb();

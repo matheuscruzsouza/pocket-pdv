@@ -1,0 +1,20 @@
+{{#itens}}
+<tr id="cart-row-{{produtoId}}">
+  <td>
+    <div class="font-bold">{{nome}}</div>
+  </td>
+  <td class="text-center" style="white-space: nowrap;">
+    <button class="btn-qty" hx-post="/pdv/carrinho/item/diminuir" hx-vals='{"produtoId": {{produtoId}}, "quantidade": 1}' hx-target="#cart-table-body">-</button>
+    <span class="font-mono font-bold" style="margin: 0 0.4rem;">{{quantidade}}</span>
+    <button class="btn-qty" hx-post="/pdv/carrinho/item" hx-vals='{"produtoId": {{produtoId}}, "quantidade": 1}' hx-target="#cart-table-body">+</button>
+  </td>
+  <td class="text-right">{{precoFormatado}}</td>
+  <td class="text-right font-bold">{{subtotalFormatado}}</td>
+  <td class="text-center">
+    <button class="btn btn-danger" hx-delete="/pdv/carrinho/item/{{produtoId}}" hx-target="#cart-table-body">&times;</button>
+  </td>
+</tr>
+{{/itens}}
+{{^itens}}
+<tr><td colspan="5" class="text-center" style="color: #9ca3af; padding: 2rem;">Carrinho vazio</td></tr>
+{{/itens}}

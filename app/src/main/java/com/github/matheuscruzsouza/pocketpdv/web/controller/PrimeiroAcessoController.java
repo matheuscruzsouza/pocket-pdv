@@ -5,10 +5,15 @@ import com.github.matheuscruzsouza.nanospring.annotation.GetMethod;
 import com.github.matheuscruzsouza.nanospring.annotation.PostMethod;
 import com.github.matheuscruzsouza.nanospring.annotation.RequestParam;
 import com.github.matheuscruzsouza.nanospring.annotation.RestController;
+import com.github.matheuscruzsouza.nanospring.openapi.annotation.ApiResponse;
+import com.github.matheuscruzsouza.nanospring.openapi.annotation.Operation;
+import com.github.matheuscruzsouza.nanospring.openapi.annotation.Parameter;
+import com.github.matheuscruzsouza.nanospring.openapi.annotation.Tag;
 import com.github.matheuscruzsouza.pocketpdv.persistence.FuncionarioRepository;
 import com.github.matheuscruzsouza.pocketpdv.service.PocketPdvService;
 import com.github.matheuscruzsouza.pocketpdv.web.view.HtmlTemplates;
 
+@Tag(name = "Primeiro Acesso & Recuperação", description = "Definição e recuperação de senha de colaboradores com código")
 @RestController("/primeiro-acesso")
 public class PrimeiroAcessoController {
 
@@ -33,17 +38,22 @@ public class PrimeiroAcessoController {
         return funcionarioRepository;
     }
 
+    @Operation(summary = "Exibir formulário de primeiro acesso / recuperação", description = "Renderiza página HTML para validação do código e cadastro de senha")
+    @ApiResponse(responseCode = 200, description = "Página de primeiro acesso renderizada")
     @GetMethod(value = "", mimeType = "text/html")
-    public String primeiroAcessoPage() {
+    public Object primeiroAcessoPage() {
         return HtmlTemplates.paginaPrimeiroAcesso(null, null);
     }
 
+    @Operation(summary = "Confirmar código e definir nova senha", description = "Valida o código de 6 dígitos gerado e grava a nova senha do colaborador")
+    @ApiResponse(responseCode = 200, description = "Senha cadastrada com sucesso; retorna formulário de login")
+    @ApiResponse(responseCode = 400, description = "Código inválido, dados incompletos ou senhas divergentes")
     @PostMethod(value = "", mimeType = "text/html")
-    public String confirmarPrimeiroAcesso(
-            @RequestParam("usuario") String usuario,
-            @RequestParam("codigo") String codigo,
-            @RequestParam("senha") String senha,
-            @RequestParam("confirmaSenha") String confirmaSenha) {
+    public Object confirmarPrimeiroAcesso(
+            @Parameter(description = "Nome de usuário do colaborador", example = "blima") @RequestParam("usuario") String usuario,
+            @Parameter(description = "Código de 6 dígitos alfanuméricos gerado pelo admin", example = "K9P2X4") @RequestParam("codigo") String codigo,
+            @Parameter(description = "Nova senha do colaborador", example = "senhaForte123") @RequestParam("senha") String senha,
+            @Parameter(description = "Confirmação da nova senha", example = "senhaForte123") @RequestParam("confirmaSenha") String confirmaSenha) {
 
         if (usuario == null || usuario.trim().isEmpty() ||
             codigo == null || codigo.trim().isEmpty() ||

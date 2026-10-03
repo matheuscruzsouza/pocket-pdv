@@ -1,25 +1,25 @@
 -- Merging decision tree log ---
 provider#androidx.core.content.FileProvider
-INJECTED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:35:9-43:20
+INJECTED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:38:9-46:20
 	android:grantUriPermissions
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:39:13-47
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:42:13-47
 	android:authorities
 		INJECTED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:37:13-60
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:40:13-60
 	android:exported
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:38:13-37
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:41:13-37
 	android:name
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:36:13-62
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:39:13-62
 manifest
-ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:2:1-47:12
-INJECTED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:2:1-47:12
-INJECTED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:2:1-47:12
-INJECTED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:2:1-47:12
+ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:2:1-50:12
+INJECTED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:2:1-50:12
+INJECTED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:2:1-50:12
+INJECTED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:2:1-50:12
 MERGED from [com.google.android.material:material:1.10.0] /home/Matheus/.gradle/caches/transforms-4/f2d4e9b2569615178391e2d49959b794/transformed/material-1.10.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.appcompat:appcompat-resources:1.6.1] /home/Matheus/.gradle/caches/transforms-4/f8911485f7774dac385a13e35c22f9ee/transformed/appcompat-resources-1.6.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/Matheus/.gradle/caches/transforms-4/fd0bf5c8cff535523e6f59e36e934dd5/transformed/constraintlayout-2.0.1/AndroidManifest.xml:2:1-11:12
 MERGED from [androidx.appcompat:appcompat:1.6.1] /home/Matheus/.gradle/caches/transforms-4/9e8b1a1d23c4884b321a977438463461/transformed/appcompat-1.6.1/AndroidManifest.xml:17:1-22:12
-MERGED from [com.github.matheuscruzsouza:nano-spring:1.5.0] /home/Matheus/.gradle/caches/transforms-4/d7fe9d1aad932ed66a4b5aa529eea5f8/transformed/nano-spring-1.5.0/AndroidManifest.xml:2:1-12:12
+MERGED from [com.github.matheuscruzsouza:nano-spring:1.10.0] /home/Matheus/.gradle/caches/transforms-4/fe6748b976c9bd6186b3f698bf294c9f/transformed/nano-spring-1.10.0/AndroidManifest.xml:2:1-12:12
 MERGED from [androidx.viewpager2:viewpager2:1.0.0] /home/Matheus/.gradle/caches/transforms-4/07080e1dba9652b2b4b7f168dd97b763/transformed/viewpager2-1.0.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.fragment:fragment:1.3.6] /home/Matheus/.gradle/caches/transforms-4/a9efc84aa0bdce2d5dbd3365bb8df30b/transformed/fragment-1.3.6/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.activity:activity:1.8.0] /home/Matheus/.gradle/caches/transforms-4/3747b398cd8263ae8a74f8a2c1951420/transformed/activity-1.8.0/AndroidManifest.xml:17:1-22:12
@@ -67,20 +67,20 @@ MERGED from [androidx.annotation:annotation-experimental:1.3.0] /home/Matheus/.g
 		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:2:11-69
 uses-permission#android.permission.INTERNET
 ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:4:5-67
-MERGED from [com.github.matheuscruzsouza:nano-spring:1.5.0] /home/Matheus/.gradle/caches/transforms-4/d7fe9d1aad932ed66a4b5aa529eea5f8/transformed/nano-spring-1.5.0/AndroidManifest.xml:7:5-67
-MERGED from [com.github.matheuscruzsouza:nano-spring:1.5.0] /home/Matheus/.gradle/caches/transforms-4/d7fe9d1aad932ed66a4b5aa529eea5f8/transformed/nano-spring-1.5.0/AndroidManifest.xml:7:5-67
+MERGED from [com.github.matheuscruzsouza:nano-spring:1.10.0] /home/Matheus/.gradle/caches/transforms-4/fe6748b976c9bd6186b3f698bf294c9f/transformed/nano-spring-1.10.0/AndroidManifest.xml:7:5-67
+MERGED from [com.github.matheuscruzsouza:nano-spring:1.10.0] /home/Matheus/.gradle/caches/transforms-4/fe6748b976c9bd6186b3f698bf294c9f/transformed/nano-spring-1.10.0/AndroidManifest.xml:7:5-67
 	android:name
 		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:4:22-64
 uses-permission#android.permission.ACCESS_NETWORK_STATE
 ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:5:5-79
-MERGED from [com.github.matheuscruzsouza:nano-spring:1.5.0] /home/Matheus/.gradle/caches/transforms-4/d7fe9d1aad932ed66a4b5aa529eea5f8/transformed/nano-spring-1.5.0/AndroidManifest.xml:8:5-79
-MERGED from [com.github.matheuscruzsouza:nano-spring:1.5.0] /home/Matheus/.gradle/caches/transforms-4/d7fe9d1aad932ed66a4b5aa529eea5f8/transformed/nano-spring-1.5.0/AndroidManifest.xml:8:5-79
+MERGED from [com.github.matheuscruzsouza:nano-spring:1.10.0] /home/Matheus/.gradle/caches/transforms-4/fe6748b976c9bd6186b3f698bf294c9f/transformed/nano-spring-1.10.0/AndroidManifest.xml:8:5-79
+MERGED from [com.github.matheuscruzsouza:nano-spring:1.10.0] /home/Matheus/.gradle/caches/transforms-4/fe6748b976c9bd6186b3f698bf294c9f/transformed/nano-spring-1.10.0/AndroidManifest.xml:8:5-79
 	android:name
 		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:5:22-76
 uses-permission#android.permission.ACCESS_WIFI_STATE
 ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:6:5-76
-MERGED from [com.github.matheuscruzsouza:nano-spring:1.5.0] /home/Matheus/.gradle/caches/transforms-4/d7fe9d1aad932ed66a4b5aa529eea5f8/transformed/nano-spring-1.5.0/AndroidManifest.xml:9:5-76
-MERGED from [com.github.matheuscruzsouza:nano-spring:1.5.0] /home/Matheus/.gradle/caches/transforms-4/d7fe9d1aad932ed66a4b5aa529eea5f8/transformed/nano-spring-1.5.0/AndroidManifest.xml:9:5-76
+MERGED from [com.github.matheuscruzsouza:nano-spring:1.10.0] /home/Matheus/.gradle/caches/transforms-4/fe6748b976c9bd6186b3f698bf294c9f/transformed/nano-spring-1.10.0/AndroidManifest.xml:9:5-76
+MERGED from [com.github.matheuscruzsouza:nano-spring:1.10.0] /home/Matheus/.gradle/caches/transforms-4/fe6748b976c9bd6186b3f698bf294c9f/transformed/nano-spring-1.10.0/AndroidManifest.xml:9:5-76
 	android:name
 		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:6:22-73
 uses-permission#android.permission.WAKE_LOCK
@@ -91,23 +91,31 @@ uses-permission#android.permission.FOREGROUND_SERVICE
 ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:8:5-77
 	android:name
 		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:8:22-74
+uses-permission#android.permission.FOREGROUND_SERVICE_DATA_SYNC
+ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:9:5-87
+	android:name
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:9:22-84
+uses-permission#android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:10:5-95
+	android:name
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:10:22-92
 uses-permission#android.permission.CHANGE_WIFI_MULTICAST_STATE
-ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:9:5-86
-MERGED from [com.github.matheuscruzsouza:nano-spring:1.5.0] /home/Matheus/.gradle/caches/transforms-4/d7fe9d1aad932ed66a4b5aa529eea5f8/transformed/nano-spring-1.5.0/AndroidManifest.xml:10:5-86
-MERGED from [com.github.matheuscruzsouza:nano-spring:1.5.0] /home/Matheus/.gradle/caches/transforms-4/d7fe9d1aad932ed66a4b5aa529eea5f8/transformed/nano-spring-1.5.0/AndroidManifest.xml:10:5-86
+ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:11:5-86
+MERGED from [com.github.matheuscruzsouza:nano-spring:1.10.0] /home/Matheus/.gradle/caches/transforms-4/fe6748b976c9bd6186b3f698bf294c9f/transformed/nano-spring-1.10.0/AndroidManifest.xml:10:5-86
+MERGED from [com.github.matheuscruzsouza:nano-spring:1.10.0] /home/Matheus/.gradle/caches/transforms-4/fe6748b976c9bd6186b3f698bf294c9f/transformed/nano-spring-1.10.0/AndroidManifest.xml:10:5-86
 	android:name
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:9:22-83
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:11:22-83
 uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
-ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:10:5-81
+ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:12:5-81
 	android:name
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:10:22-78
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:12:22-78
 uses-permission#android.permission.READ_EXTERNAL_STORAGE
-ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:11:5-80
+ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:13:5-80
 	android:name
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:11:22-77
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:13:22-77
 application
-ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:13:5-45:19
-INJECTED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:13:5-45:19
+ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:15:5-48:19
+INJECTED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:15:5-48:19
 MERGED from [com.google.android.material:material:1.10.0] /home/Matheus/.gradle/caches/transforms-4/f2d4e9b2569615178391e2d49959b794/transformed/material-1.10.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.10.0] /home/Matheus/.gradle/caches/transforms-4/f2d4e9b2569615178391e2d49959b794/transformed/material-1.10.0/AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/Matheus/.gradle/caches/transforms-4/fd0bf5c8cff535523e6f59e36e934dd5/transformed/constraintlayout-2.0.1/AndroidManifest.xml:9:5-20
@@ -129,47 +137,49 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] /home/Matheus/.gradle/cache
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.9.0] /home/Matheus/.gradle/caches/transforms-4/95cfb4e196d2ba2e82e03dcfe0c1e659/transformed/core-1.9.0/AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:18:9-35
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:20:9-35
 	android:label
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:16:9-34
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:18:9-34
 	android:roundIcon
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:17:9-63
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:19:9-56
 	android:icon
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:15:9-58
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:17:9-45
 	android:allowBackup
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:14:9-35
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:16:9-35
 	android:theme
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:19:9-67
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:21:9-67
 activity#com.github.matheuscruzsouza.pocketpdv.ui.MainActivity
-ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:21:9-28:20
+ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:23:9-30:20
 	android:exported
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:23:13-36
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:25:13-36
 	android:name
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:22:13-44
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:24:13-44
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:24:13-27:29
+ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:26:13-29:29
 action#android.intent.action.MAIN
-ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:25:17-69
+ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:27:17-69
 	android:name
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:25:25-66
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:27:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:26:17-77
+ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:28:17-77
 	android:name
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:26:27-74
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:28:27-74
 service#com.github.matheuscruzsouza.pocketpdv.service.PocketPdvService
-ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:30:9-33:40
+ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:32:9-36:56
 	android:enabled
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:32:13-35
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:34:13-35
 	android:exported
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:33:13-37
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:35:13-37
+	android:foregroundServiceType
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:36:13-53
 	android:name
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:31:13-53
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:33:13-53
 meta-data#android.support.FILE_PROVIDER_PATHS
-ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:40:13-42:54
+ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:43:13-45:54
 	android:resource
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:42:17-51
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:45:17-51
 	android:name
-		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:41:17-67
+		ADDED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml:44:17-67
 uses-sdk
 INJECTED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /media/Matheus/11298c83-5c18-4a88-9d5b-00c393b4ba94/home/matheus/AndroidStudioProjects/PocketPDV/app/src/main/AndroidManifest.xml
@@ -182,8 +192,8 @@ MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/Matheus/.gr
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/Matheus/.gradle/caches/transforms-4/fd0bf5c8cff535523e6f59e36e934dd5/transformed/constraintlayout-2.0.1/AndroidManifest.xml:5:5-7:41
 MERGED from [androidx.appcompat:appcompat:1.6.1] /home/Matheus/.gradle/caches/transforms-4/9e8b1a1d23c4884b321a977438463461/transformed/appcompat-1.6.1/AndroidManifest.xml:20:5-44
 MERGED from [androidx.appcompat:appcompat:1.6.1] /home/Matheus/.gradle/caches/transforms-4/9e8b1a1d23c4884b321a977438463461/transformed/appcompat-1.6.1/AndroidManifest.xml:20:5-44
-MERGED from [com.github.matheuscruzsouza:nano-spring:1.5.0] /home/Matheus/.gradle/caches/transforms-4/d7fe9d1aad932ed66a4b5aa529eea5f8/transformed/nano-spring-1.5.0/AndroidManifest.xml:5:5-44
-MERGED from [com.github.matheuscruzsouza:nano-spring:1.5.0] /home/Matheus/.gradle/caches/transforms-4/d7fe9d1aad932ed66a4b5aa529eea5f8/transformed/nano-spring-1.5.0/AndroidManifest.xml:5:5-44
+MERGED from [com.github.matheuscruzsouza:nano-spring:1.10.0] /home/Matheus/.gradle/caches/transforms-4/fe6748b976c9bd6186b3f698bf294c9f/transformed/nano-spring-1.10.0/AndroidManifest.xml:5:5-44
+MERGED from [com.github.matheuscruzsouza:nano-spring:1.10.0] /home/Matheus/.gradle/caches/transforms-4/fe6748b976c9bd6186b3f698bf294c9f/transformed/nano-spring-1.10.0/AndroidManifest.xml:5:5-44
 MERGED from [androidx.viewpager2:viewpager2:1.0.0] /home/Matheus/.gradle/caches/transforms-4/07080e1dba9652b2b4b7f168dd97b763/transformed/viewpager2-1.0.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.viewpager2:viewpager2:1.0.0] /home/Matheus/.gradle/caches/transforms-4/07080e1dba9652b2b4b7f168dd97b763/transformed/viewpager2-1.0.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.fragment:fragment:1.3.6] /home/Matheus/.gradle/caches/transforms-4/a9efc84aa0bdce2d5dbd3365bb8df30b/transformed/fragment-1.3.6/AndroidManifest.xml:20:5-22:41

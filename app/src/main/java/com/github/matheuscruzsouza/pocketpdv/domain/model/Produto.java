@@ -1,11 +1,22 @@
 package com.github.matheuscruzsouza.pocketpdv.domain.model;
 
+import com.github.matheuscruzsouza.nanospring.validation.Min;
+import com.github.matheuscruzsouza.nanospring.validation.NotBlank;
+import com.github.matheuscruzsouza.nanospring.validation.Size;
+
 public class Produto {
 
     private long id;
     private String codigoBarras;
+
+    @NotBlank(message = "O nome do produto é obrigatório")
+    @Size(min = 2, max = 120, message = "O nome deve ter entre 2 e 120 caracteres")
     private String nome;
+
+    @Min(value = 0, message = "O preço não pode ser negativo")
     private int precoCentavos;
+
+    @Min(value = 0, message = "O estoque não pode ser negativo")
     private int estoque;
 
     public Produto() {

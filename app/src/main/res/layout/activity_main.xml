@@ -546,6 +546,54 @@
                         android:layout_marginTop="4dp" />
                 </LinearLayout>
 
+                <!-- Card OpenAPI & Swagger UI -->
+                <LinearLayout
+                    android:id="@+id/cardSwaggerUi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_background"
+                    android:padding="14dp"
+                    android:layout_marginBottom="12dp"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Documentação OpenAPI 3.0"
+                        android:textColor="#111827"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="6dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Swagger UI integrado no nano-spring v1.10.0:"
+                        android:textColor="#4B5563"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tvSwaggerUrl"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="http://pocketpdv.local:8080/swagger-ui"
+                        android:textColor="#2563EB"
+                        android:fontFamily="monospace"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="4dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Toque para abrir no navegador"
+                        android:textColor="#6B7280"
+                        android:textSize="11sp"
+                        android:layout_marginTop="4dp" />
+                </LinearLayout>
+
                 <!-- Card Descoberta de Rede (mDNS/NSD) -->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -580,6 +628,56 @@
                         android:textColor="#374151"
                         android:textSize="13sp"
                         android:layout_marginTop="4dp" />
+                </LinearLayout>
+
+                <!-- Card Modo Background & Otimização de Bateria -->
+                <LinearLayout
+                    android:id="@+id/cardEconomiaBateria"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_background"
+                    android:padding="14dp"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Execução com Tela Apagada"
+                        android:textColor="#111827"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="6dp" />
+
+                    <TextView
+                        android:id="@+id/tvBateriaStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Otimização de Bateria: Verificando..."
+                        android:textColor="#374151"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="WakeLock &amp; WifiLock ativos no ForegroundService."
+                        android:textColor="#059669"
+                        android:textSize="12sp"
+                        android:layout_marginTop="4dp" />
+
+                    <Button
+                        android:id="@+id/btnIgnorarOtimizacaoBateria"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="Desativar Economia de Bateria"
+                        android:textAllCaps="false"
+                        android:textSize="12sp"
+                        android:background="@drawable/btn_primary_bg"
+                        android:textColor="#FFFFFF"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:layout_marginTop="8dp"
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <!-- Card Telemetria e Hardware -->

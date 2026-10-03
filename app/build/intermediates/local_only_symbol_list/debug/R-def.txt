@@ -1,9 +1,12 @@
 R_DEF: Internal format may change without notice
 local
+drawable badge_danger
 drawable badge_success
 drawable badge_warning
 drawable btn_primary_bg
 drawable card_background
+drawable ic_launcher
+drawable ic_launcher_round
 drawable ic_tab_equipe
 drawable ic_tab_relatorios
 drawable ic_tab_servidor
@@ -11,6 +14,7 @@ drawable ic_tab_vendas
 drawable tab_button_bg
 id bottomNavigation
 id btnExportarCsv
+id btnIgnorarOtimizacaoBateria
 id btnNovoFuncionario
 id btnRefreshRelatorios
 id btnRefreshServidor
@@ -19,6 +23,8 @@ id btnTabFuncionarios
 id btnTabRelatorios
 id btnTabServidor
 id btnTabVendas
+id cardEconomiaBateria
+id cardSwaggerUi
 id containerAlertasEstoque
 id containerDesempenhoFuncionarios
 id containerFuncionarios
@@ -34,6 +40,7 @@ id layoutTabFuncionarios
 id layoutTabRelatorios
 id layoutTabServidor
 id layoutTabVendas
+id tvBateriaStatus
 id tvDeviceInfo
 id tvFuncCargo
 id tvFuncNome
@@ -62,6 +69,7 @@ id tvServerHeaderSubtitle
 id tvServidorStatus
 id tvServidorUrlLocal
 id tvServidorUrlMdns
+id tvSwaggerUrl
 id tvTabFuncionarios
 id tvTabRelatorios
 id tvTabServidor
@@ -70,6 +78,7 @@ id tvTicketMedio
 id tvTotalVendas
 id tvVendaData
 id tvVendaId
+id tvVendaOperador
 id tvVendaStatus
 id tvVendaTotal
 layout activity_main

@@ -8,8 +8,10 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -32,7 +34,11 @@ public class PocketPdvService extends Service {
     private static PocketPdvService instance;
     private Server server;
     private DatabaseHelper dbHelper;
+    private final java.util.Map<String, Carrinho> carrinhosPorOperador = new java.util.concurrent.ConcurrentHashMap<>();
     private Carrinho carrinho;
+
+    private PowerManager.WakeLock wakeLock;
+    private WifiManager.WifiLock wifiLock;
 
     public static PocketPdvService getInstance() {
         return instance;
@@ -50,8 +56,22 @@ public class PocketPdvService extends Service {
         return dbHelper;
     }
 
+    private SessionService sessionService;
+
+    public SessionService getSessionService() {
+        if (sessionService == null) {
+            sessionService = new SessionService();
+        }
+        return sessionService;
+    }
+
     public Carrinho getCarrinho() {
-        return carrinho;
+        return getCarrinho("operador");
+    }
+
+    public Carrinho getCarrinho(String operador) {
+        String chave = (operador != null && !operador.trim().isEmpty()) ? operador.trim().toLowerCase() : "operador";
+        return carrinhosPorOperador.computeIfAbsent(chave, k -> new Carrinho());
     }
 
     @Override
@@ -59,6 +79,7 @@ public class PocketPdvService extends Service {
         super.onCreate();
         instance = this;
         startForegroundNotification();
+        acquireLocks();
 
         try {
             // Inicializa ambiente do nano-spring
@@ -72,10 +93,12 @@ public class PocketPdvService extends Service {
             server = new Server(this, PORT, "com.github.matheuscruzsouza.pocketpdv");
 
             // Registra singletons para injecao via @Autowired
+            sessionService = new SessionService();
             server.registerSingleton(Context.class, this);
             server.registerSingleton(DatabaseHelper.class, dbHelper);
             server.registerSingleton(SQLiteDatabase.class, dbHelper.getWritableDatabase());
             server.registerSingleton(Carrinho.class, carrinho);
+            server.registerSingleton(SessionService.class, sessionService);
 
             Log.i(TAG, "NanoSpring Server rodando na porta " + PORT);
 
@@ -92,6 +115,7 @@ public class PocketPdvService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        releaseLocks();
         if (server != null) {
             try {
                 server.stop();
@@ -104,6 +128,55 @@ public class PocketPdvService extends Service {
             dbHelper.close();
         }
         instance = null;
+    }
+
+    private void acquireLocks() {
+        try {
+            PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            if (powerManager != null && (wakeLock == null || !wakeLock.isHeld())) {
+                wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "PocketPDV::ServerWakeLock");
+                wakeLock.setReferenceCounted(false);
+                wakeLock.acquire();
+                Log.i(TAG, "WakeLock (CPU) adquirido para manter servidor ativo com tela apagada.");
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "Falha ao adquirir WakeLock: " + e.getMessage());
+        }
+
+        try {
+            WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            if (wifiManager != null && (wifiLock == null || !wifiLock.isHeld())) {
+                int wifiMode = WifiManager.WIFI_MODE_FULL_HIGH_PERF;
+                wifiLock = wifiManager.createWifiLock(wifiMode, "PocketPDV::ServerWifiLock");
+                wifiLock.setReferenceCounted(false);
+                wifiLock.acquire();
+                Log.i(TAG, "WifiLock (Modo High-Perf) adquirido para manter rádio Wi-Fi conectado.");
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "Falha ao adquirir WifiLock: " + e.getMessage());
+        }
+    }
+
+    private void releaseLocks() {
+        try {
+            if (wakeLock != null && wakeLock.isHeld()) {
+                wakeLock.release();
+                wakeLock = null;
+                Log.i(TAG, "WakeLock liberado.");
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "Erro ao liberar WakeLock: " + e.getMessage());
+        }
+
+        try {
+            if (wifiLock != null && wifiLock.isHeld()) {
+                wifiLock.release();
+                wifiLock = null;
+                Log.i(TAG, "WifiLock liberado.");
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "Erro ao liberar WifiLock: " + e.getMessage());
+        }
     }
 
     @Override

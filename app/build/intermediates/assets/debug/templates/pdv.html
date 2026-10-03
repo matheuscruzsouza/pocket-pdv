@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PocketPDV - Terminal</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/htmx.min.js"></script>
+  <script>
+    document.addEventListener('htmx:configRequest', function(evt) {
+      evt.detail.parameters['operador'] = '{{usuarioOperador}}';
+      evt.detail.headers['x-operador'] = '{{usuarioOperador}}';
+      evt.detail.headers['X-Operador'] = '{{usuarioOperador}}';
+    });
+  </script>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+        <span class="brand">PocketPDV</span>
+        <span class="badge" style="margin-left: 0.5rem; background: #e0e7ff; color: #3730a3;">👤 {{nomeOperador}}</span>
+      </div>
+      <div style="display: flex; gap: 0.75rem; align-items: center;">
+        <button class="btn btn-secondary" hx-get="/pdv/estoque" hx-target="#modal-container" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;">📦 Gestão de Estoque</button>
+        <button class="btn btn-secondary" hx-get="/pdv/relatorio" hx-target="#modal-container" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;">📊 Vendas de Hoje</button>
+        <a href="/login" onclick="document.cookie='usuario_pdv=; path=/; max-age=0;';" style="color: #6b7280; font-size: 0.875rem; text-decoration: none;">Encerrar Sessão</a>
+      </div>
+    </header>
+
+    <div class="barcode-bar">
+      <form hx-post="/pdv/carrinho/codigo" hx-target="#cart-table-body" style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+        <span style="font-weight: 700; color: #374151; white-space: nowrap;">⚡ Código de Barras:</span>
+        <input type="text" name="codigo" id="input-codigo-barras" class="form-input" style="flex: 1; min-width: 220px; font-family: monospace; font-size: 1.1rem; font-weight: bold;" placeholder="Bipe ou digite o código de barras (Enter)..." autofocus autocomplete="off">
+        <button type="submit" class="btn btn-primary" style="white-space: nowrap;">+ Adicionar</button>
+      </form>
+    </div>
+
+    <div id="alerta-area">
+      {{#msgSucesso}}
+      <div style="background: #d1fae5; color: #065f46; padding: 0.75rem; border-radius: 0.375rem; margin-bottom: 1rem;">
+        {{msgSucesso}}
+      </div>
+      {{/msgSucesso}}
+      {{#msgErro}}
+      <div style="background: #fee2e2; color: #b91c1c; padding: 0.75rem; border-radius: 0.375rem; margin-bottom: 1rem;">
+        {{msgErro}}
+      </div>
+      {{/msgErro}}
+    </div>
+
+    <div class="grid">
+      <!-- Coluna Esquerda: Catálogo -->
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+          <h2 class="card-title" style="margin: 0;">Catálogo de Produtos</h2>
+          <input type="text" id="filtro-catalogo" placeholder="🔍 Buscar produto..." class="form-input" style="width: 180px; padding: 0.35rem 0.6rem; font-size: 0.85rem;" oninput="filtrarCatalogo(this.value)">
+        </div>
+        <div class="table-container">
+          <table id="tabela-catalogo">
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th class="text-right">Preço</th>
+                <th class="text-center">Estoque</th>
+                <th class="text-center">Ação</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#catalogo}}
+              <tr class="item-catalogo-row" id="row-prod-{{id}}" data-busca="{{nomeBusca}} {{codigoBarras}}">
+                <td>
+                  <div class="font-bold">{{nome}}</div>
+                  <div class="font-mono" style="font-size: 0.75rem; color: #6b7280;">{{codigoBarras}}</div>
+                </td>
+                <td class="text-right font-bold">{{precoFormatado}}</td>
+                <td class="text-center">
+                  <span id="estoque-prod-{{id}}" style="padding: 0.2rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: bold; background: {{#estoqueBaixo}}#fee2e2; color: #b91c1c;{{/estoqueBaixo}}{{^estoqueBaixo}}#e5e7eb; color: #374151;{{/estoqueBaixo}}">{{estoque}} un</span>
+                </td>
+                <td class="text-center">
+                  {{#disponivel}}
+                  <button id="btn-add-prod-{{id}}" class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.85rem;" hx-post="/pdv/carrinho/item" hx-vals='{"produtoId": {{id}}, "quantidade": 1}' hx-target="#cart-table-body">
+                    + Adicionar
+                  </button>
+                  {{/disponivel}}
+                  {{^disponivel}}
+                  <button id="btn-add-prod-{{id}}" class="btn btn-secondary" disabled style="padding: 0.35rem 0.75rem; font-size: 0.85rem; opacity: 0.5; cursor: not-allowed;">Esgotado</button>
+                  {{/disponivel}}
+                </td>
+              </tr>
+              {{/catalogo}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Coluna Direita: Carrinho -->
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h2 class="card-title" style="margin: 0;">Carrinho de Compras</h2>
+          <button class="btn btn-secondary" style="padding: 0.25rem 0.6rem; font-size: 0.75rem; color: #b91c1c;" hx-delete="/pdv/carrinho" hx-confirm="Tem certeza que deseja limpar todo o carrinho?" hx-target="#cart-table-body">Esvaziar</button>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th class="text-center">Qtd</th>
+                <th class="text-right">Unitário</th>
+                <th class="text-right">Subtotal</th>
+                <th class="text-center">Remover</th>
+              </tr>
+            </thead>
+            <tbody id="cart-table-body">
+              {{#itensCarrinho}}
+              <tr id="cart-row-{{produtoId}}">
+                <td>
+                  <div class="font-bold">{{nome}}</div>
+                </td>
+                <td class="text-center" style="white-space: nowrap;">
+                  <button class="btn-qty" hx-post="/pdv/carrinho/item/diminuir" hx-vals='{"produtoId": {{produtoId}}, "quantidade": 1}' hx-target="#cart-table-body">-</button>
+                  <span class="font-mono font-bold" style="margin: 0 0.4rem;">{{quantidade}}</span>
+                  <button class="btn-qty" hx-post="/pdv/carrinho/item" hx-vals='{"produtoId": {{produtoId}}, "quantidade": 1}' hx-target="#cart-table-body">+</button>
+                </td>
+                <td class="text-right">{{precoFormatado}}</td>
+                <td class="text-right font-bold">{{subtotalFormatado}}</td>
+                <td class="text-center">
+                  <button class="btn btn-danger" hx-delete="/pdv/carrinho/item/{{produtoId}}" hx-target="#cart-table-body">&times;</button>
+                </td>
+              </tr>
+              {{/itensCarrinho}}
+              {{^itensCarrinho}}
+              <tr><td colspan="5" class="text-center" style="color: #9ca3af; padding: 2rem;">Carrinho vazio</td></tr>
+              {{/itensCarrinho}}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Total do Carrinho -->
+        <div class="cart-summary">
+          <div class="cart-total-label">Total a Pagar</div>
+          <div class="cart-total-val" id="cart-total">{{totalFormatado}}</div>
+        </div>
+
+        <!-- Botão Finalizar Venda -->
+        <button id="btn-checkout" class="btn btn-checkout" onclick="abrirCheckout()" {{#carrinhoVazio}}disabled style="opacity: 0.5; cursor: not-allowed;"{{/carrinhoVazio}}>
+          Finalizar Venda
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-container"></div>
+
+  <script>
+    if (!window.location.search.includes('operador=')) {
+      var m = document.cookie.match(/usuario_pdv=([^;]+)/);
+      if (m && m[1]) {
+        window.location.replace('/pdv?operador=' + encodeURIComponent(m[1].trim()));
+      }
+    }
+    function filtrarCatalogo(termo) {
+      termo = (termo || '').toLowerCase().trim();
+      var rows = document.querySelectorAll('#tabela-catalogo .item-catalogo-row');
+      rows.forEach(function(row) {
+        var data = row.getAttribute('data-busca') || '';
+        row.style.display = data.indexOf(termo) !== -1 ? '' : 'none';
+      });
+    }
+    function fecharModal() {
+      var c = document.getElementById('modal-container');
+      if (c) c.innerHTML = '';
+    }
+    function abrirCheckout() {
+      var totalText = document.getElementById('cart-total').innerText;
+      var totalCentavos = Math.round(parseFloat(totalText.replace('R$', '').replace('.', '').replace(',', '.').trim()) * 100) || 0;
+      if (totalCentavos <= 0) return;
+      var opAtivo = (new URLSearchParams(window.location.search).get('operador') || usuarioOperador || '').trim();
+      var html = '<div class="modal" onclick="if(event.target===this) fecharModal()">' +
+        '<div class="modal-content">' +
+        '  <div class="modal-header">' +
+        '    <h3 class="modal-title">Finalizar Pagamento</h3>' +
+        '    <button class="modal-close" onclick="fecharModal()">&times;</button>' +
+        '  </div>' +
+        '  <div class="cart-summary" style="margin-bottom: 1rem;">' +
+        '    <div class="cart-total-label">Total da Venda</div>' +
+        '    <div class="cart-total-val">' + totalText + '</div>' +
+        '  </div>' +
+        '  <form hx-post="/pdv/carrinho/checkout" hx-target="#alerta-area" onsubmit="fecharModal()">' +
+        '    <input type="hidden" name="operador" value="' + opAtivo + '">' +
+        '    <div class="form-group">' +
+        '      <label class="form-label">Forma de Pagamento</label>' +
+        '      <input type="hidden" id="forma-pagamento-val" name="formaPagamento" value="DINHEIRO">' +
+        '      <div class="payment-options">' +
+        '        <div class="payment-btn active" onclick="selecionarPagamento(this, \'DINHEIRO\')">💵 Dinheiro</div>' +
+        '        <div class="payment-btn" onclick="selecionarPagamento(this, \'PIX\')">📱 PIX</div>' +
+        '        <div class="payment-btn" onclick="selecionarPagamento(this, \'DEBITO\')">💳 Débito</div>' +
+        '        <div class="payment-btn" onclick="selecionarPagamento(this, \'CREDITO\')">💳 Crédito</div>' +
+        '      </div>' +
+        '    </div>' +
+        '    <div id="troco-container" class="troco-box">' +
+        '      <label class="form-label" style="margin-bottom: 0.35rem;">Valor Recebido (R$)</label>' +
+        '      <input type="number" step="0.01" id="valor-recebido" class="form-input" placeholder="Ex: 50.00" oninput="calcularTroco(' + totalCentavos + ')">' +
+        '      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.75rem;">' +
+        '        <span style="font-weight: 700; color: #4b5563;">Troco a Devolver:</span>' +
+        '        <span id="label-troco" class="troco-val">R$ 0,00</span>' +
+        '      </div>' +
+        '    </div>' +
+        '    <button type="submit" class="btn btn-checkout">Confirmar e Finalizar Venda</button>' +
+        '  </form>' +
+        '</div>' +
+        '</div>';
+      document.getElementById('modal-container').innerHTML = html;
+      setTimeout(function(){ var inp = document.getElementById('valor-recebido'); if (inp) inp.focus(); }, 100);
+    }
+    function selecionarPagamento(btn, forma) {
+      document.querySelectorAll('.payment-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('forma-pagamento-val').value = forma;
+      var trocoBox = document.getElementById('troco-container');
+      if (trocoBox) trocoBox.style.display = (forma === 'DINHEIRO') ? 'block' : 'none';
+    }
+    function calcularTroco(totalCentavos) {
+      var recVal = parseFloat(document.getElementById('valor-recebido').value) || 0;
+      var recCentavos = Math.round(recVal * 100);
+      var difCentavos = recCentavos - totalCentavos;
+      var labelTroco = document.getElementById('label-troco');
+      if (difCentavos >= 0) {
+        labelTroco.style.color = '#10b981';
+        labelTroco.innerText = 'R$ ' + (difCentavos / 100).toFixed(2).replace('.', ',');
+      } else {
+        labelTroco.style.color = '#ef4444';
+        labelTroco.innerText = 'Falta R$ ' + (Math.abs(difCentavos) / 100).toFixed(2).replace('.', ',');
+      }
+    }
+    var usuarioOperador = '{{usuarioOperador}}';
+    function renderizarCarrinhoSse(data) {
+      if (!data) return;
+      var tbody = document.getElementById('cart-table-body');
+      var totalEl = document.getElementById('cart-total');
+      var btnCheckout = document.getElementById('btn-checkout');
+      if (totalEl) totalEl.innerText = data.totalFormatado || 'R$ 0,00';
+      if (btnCheckout) {
+        var vazio = (!data.itens || data.itens.length === 0);
+        btnCheckout.disabled = vazio;
+        btnCheckout.style.opacity = vazio ? '0.5' : '1';
+        btnCheckout.style.cursor = vazio ? 'not-allowed' : 'pointer';
+      }
+      if (tbody) {
+        if (!data.itens || data.itens.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" class="text-center" style="color: #9ca3af; padding: 2rem;">Carrinho vazio</td></tr>';
+        } else {
+          var html = '';
+          for (var i = 0; i < data.itens.length; i++) {
+            var item = data.itens[i];
+            var pId = item.produtoId;
+            html += '<tr id="cart-row-' + pId + '">' +
+              '  <td><div class="font-bold">' + item.nome + '</div></td>' +
+              '  <td class="text-center" style="white-space: nowrap;">' +
+              '    <button class="btn-qty" hx-post="/pdv/carrinho/item/diminuir" hx-vals=\'{"produtoId": ' + pId + ', "quantidade": 1}\' hx-target="#cart-table-body">-</button>' +
+              '    <span class="font-mono font-bold" style="margin: 0 0.4rem;">' + item.quantidade + '</span>' +
+              '    <button class="btn-qty" hx-post="/pdv/carrinho/item" hx-vals=\'{"produtoId": ' + pId + ', "quantidade": 1}\' hx-target="#cart-table-body">+</button>' +
+              '  </td>' +
+              '  <td class="text-right">' + item.precoFormatado + '</td>' +
+              '  <td class="text-right font-bold">' + item.subtotalFormatado + '</td>' +
+              '  <td class="text-center">' +
+              '    <button class="btn btn-danger" hx-delete="/pdv/carrinho/item/' + pId + '" hx-target="#cart-table-body">&times;</button>' +
+              '  </td>' +
+              '</tr>';
+          }
+          tbody.innerHTML = html;
+          if (window.htmx) htmx.process(tbody);
+        }
+      }
+    }
+    function conectarSse() {
+      if (!window.EventSource) return;
+      try {
+        var sse = new EventSource('/pdv/eventos/estoque');
+        sse.addEventListener('estoque-atualizado', function(e) {
+          try {
+            var data = JSON.parse(e.data);
+            var el = document.getElementById('estoque-prod-' + data.produtoId);
+            var btn = document.getElementById('btn-add-prod-' + data.produtoId);
+            if (el) {
+              if (data.novoEstoque <= 0) {
+                el.innerText = '0 un (Esgotado)';
+                el.style.background = '#fee2e2';
+                el.style.color = '#b91c1c';
+              } else if (data.novoEstoque <= 5) {
+                el.innerText = data.novoEstoque + ' un';
+                el.style.background = '#fee2e2';
+                el.style.color = '#b91c1c';
+              } else {
+                el.innerText = data.novoEstoque + ' un';
+                el.style.background = '#e5e7eb';
+                el.style.color = '#374151';
+              }
+            }
+            if (btn) {
+              if (data.novoEstoque <= 0) {
+                btn.disabled = true;
+                btn.innerText = 'Esgotado';
+                btn.className = 'btn btn-secondary';
+                btn.style.opacity = '0.5';
+                btn.style.cursor = 'not-allowed';
+              } else {
+                btn.disabled = false;
+                btn.innerText = '+ Adicionar';
+                btn.className = 'btn btn-primary';
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+              }
+            }
+            var elModal = document.getElementById('modal-estoque-prod-' + data.produtoId);
+            if (elModal) {
+              elModal.innerText = data.novoEstoque + ' un';
+            }
+          } catch(err) {}
+        });
+        sse.addEventListener('carrinho-atualizado', function(e) {
+          try {
+            var data = JSON.parse(e.data);
+            if (data.operador && data.operador.toLowerCase() === usuarioOperador.toLowerCase()) {
+              renderizarCarrinhoSse(data);
+            }
+          } catch(err) {}
+        });
+        sse.onerror = function() {
+          sse.close();
+          setTimeout(conectarSse, 3000);
+        };
+      } catch(err) {}
+    }
+    conectarSse();
+  </script>
+</body>
+</html>

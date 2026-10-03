@@ -2,7 +2,7 @@
 
 [![Platform](https://img.shields.io/badge/Platform-Android%207.1%2B%20%7C%20API%2025%2B-brightgreen.svg)](https://developer.android.com)
 [![Java](https://img.shields.io/badge/Java-8%20%2F%2017-orange.svg)](https://www.oracle.com/java/)
-[![Framework](https://img.shields.io/badge/Framework-nano--spring%201.5.0-blue.svg)](https://github.com/matheuscruzsouza/nano-spring)
+[![Framework](https://img.shields.io/badge/Framework-nano--spring%201.10.0-blue.svg)](https://github.com/matheuscruzsouza/nano-spring)
 [![Architecture](https://img.shields.io/badge/Architecture-Hybrid%20Native%20%2B%20Web%20PDV-purple.svg)](#arquitetura-do-sistema)
 [![Memory](https://img.shields.io/badge/RAM%20PSS-%3C%2040%20MB-success.svg)](#telemetria-e-desempenho)
 [![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)](LICENSE)
@@ -124,7 +124,7 @@ flowchart TD
 
 - **Linguagem:** Java 8 / Java 17
 - **Plataforma:** Android SDK (API 25: Android 7.1.1 Nougat / API 34 Compile)
-- **Servidor Web & IoC:** [`com.github.matheuscruzsouza:nano-spring:1.5.0`](https://github.com/matheuscruzsouza/nano-spring)
+- **Servidor Web & IoC:** [`com.github.matheuscruzsouza:nano-spring:1.10.0`](https://github.com/matheuscruzsouza/nano-spring)
 - **Banco de Dados:** SQLite 3 nativo com modo WAL habilitado
 - **Frontend Web:** HTML5, CSS3, [HTMX](https://htmx.org/) e Server-Sent Events (SSE)
 - **Service Discovery:** Android NSD (Network Service Discovery / mDNS)

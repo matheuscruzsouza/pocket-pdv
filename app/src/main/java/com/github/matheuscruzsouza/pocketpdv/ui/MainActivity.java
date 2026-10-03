@@ -4,12 +4,16 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -33,11 +37,18 @@ import com.github.matheuscruzsouza.pocketpdv.domain.model.RelatorioVendasPorFunc
 import com.github.matheuscruzsouza.pocketpdv.domain.model.Venda;
 import com.github.matheuscruzsouza.pocketpdv.domain.service.RelatorioService;
 import com.github.matheuscruzsouza.pocketpdv.domain.service.RelatorioServiceImpl;
+import com.github.matheuscruzsouza.pocketpdv.domain.service.VendaService;
+import com.github.matheuscruzsouza.pocketpdv.domain.service.VendaServiceImpl;
 import com.github.matheuscruzsouza.pocketpdv.persistence.DatabaseHelper;
 import com.github.matheuscruzsouza.pocketpdv.persistence.FuncionarioRepository;
+import com.github.matheuscruzsouza.pocketpdv.persistence.ItemVendaRepository;
 import com.github.matheuscruzsouza.pocketpdv.persistence.ProdutoRepository;
 import com.github.matheuscruzsouza.pocketpdv.persistence.VendaRepository;
+import com.github.matheuscruzsouza.pocketpdv.service.EstoqueSseHub;
 import com.github.matheuscruzsouza.pocketpdv.service.PocketPdvService;
+
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -108,8 +119,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvServidorStatus;
     private TextView tvServidorUrlLocal;
     private TextView tvServidorUrlMdns;
+    private View cardSwaggerUi;
+    private TextView tvSwaggerUrl;
     private TextView tvMdnsStatus;
     private TextView tvNsdStatus;
+    private TextView tvBateriaStatus;
+    private Button btnIgnorarOtimizacaoBateria;
     private TextView tvRamTotalPss;
     private TextView tvRamJavaHeap;
     private TextView tvRamNativeHeap;
@@ -120,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
     private RelatorioService relatorioService;
     private VendaRepository vendaRepository;
     private FuncionarioRepository funcionarioRepository;
+    private VendaService vendaService;
 
     private int activeTab = 0; // 0=Vendas, 1=Funcionários, 2=Relatórios, 3=Servidor
 
@@ -140,6 +156,10 @@ public class MainActivity extends AppCompatActivity {
         btnRefreshRelatorios.setOnClickListener(v -> atualizarDadosRelatorios());
         btnExportarCsv.setOnClickListener(v -> exportarRelatorioCsv());
         btnRefreshServidor.setOnClickListener(v -> atualizarDadosServidor());
+
+        // Escuta vendas concluídas para atualizar métricas e notificar via Toast nativo no Android
+        EstoqueSseHub.getInstance().registrarVendaListener(vendaConcluidaListener);
+        EstoqueSseHub.getInstance().registrarEstoqueListener(estoqueAtualizadoListener);
     }
 
     @Override
@@ -196,13 +216,32 @@ public class MainActivity extends AppCompatActivity {
         tvServidorStatus = findViewById(R.id.tvServidorStatus);
         tvServidorUrlLocal = findViewById(R.id.tvServidorUrlLocal);
         tvServidorUrlMdns = findViewById(R.id.tvServidorUrlMdns);
+        cardSwaggerUi = findViewById(R.id.cardSwaggerUi);
+        tvSwaggerUrl = findViewById(R.id.tvSwaggerUrl);
         tvMdnsStatus = findViewById(R.id.tvMdnsStatus);
         tvNsdStatus = findViewById(R.id.tvNsdStatus);
+        tvBateriaStatus = findViewById(R.id.tvBateriaStatus);
+        btnIgnorarOtimizacaoBateria = findViewById(R.id.btnIgnorarOtimizacaoBateria);
         tvRamTotalPss = findViewById(R.id.tvRamTotalPss);
         tvRamJavaHeap = findViewById(R.id.tvRamJavaHeap);
         tvRamNativeHeap = findViewById(R.id.tvRamNativeHeap);
         tvDeviceInfo = findViewById(R.id.tvDeviceInfo);
         btnRefreshServidor = findViewById(R.id.btnRefreshServidor);
+
+        if (cardSwaggerUi != null) {
+            cardSwaggerUi.setOnClickListener(v -> {
+                String ip = getLocalIpAddress();
+                String url = (ip != null && !ip.isEmpty() && !ip.equals("127.0.0.1"))
+                        ? "http://" + ip + ":" + PocketPdvService.PORT + "/swagger-ui"
+                        : "http://localhost:" + PocketPdvService.PORT + "/swagger-ui";
+                try {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url));
+                    startActivity(browserIntent);
+                } catch (Exception e) {
+                    Toast.makeText(MainActivity.this, "Erro ao abrir navegador: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     private void setupTabs() {
@@ -274,6 +313,7 @@ public class MainActivity extends AppCompatActivity {
                 relatorioService = (RelatorioService) server.getBean(RelatorioServiceImpl.class);
                 vendaRepository = (VendaRepository) server.getBean(VendaRepository.class);
                 funcionarioRepository = (FuncionarioRepository) server.getBean(FuncionarioRepository.class);
+                vendaService = (VendaService) server.getBean(VendaServiceImpl.class);
             }
         }
 
@@ -289,6 +329,73 @@ public class MainActivity extends AppCompatActivity {
         if (funcionarioRepository == null) {
             funcionarioRepository = new FuncionarioRepository(dbHelper);
         }
+        if (vendaService == null) {
+            vendaService = new VendaServiceImpl(dbHelper, new ProdutoRepository(dbHelper), vendaRepository, new ItemVendaRepository(dbHelper));
+        }
+    }
+
+    private String formatarDataAmigavel(String isoDateStr) {
+        if (isoDateStr == null || isoDateStr.trim().isEmpty()) {
+            return "";
+        }
+        try {
+            SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
+            String limpa = isoDateStr.replace("Z", "");
+            Date data = parser.parse(limpa);
+            if (data == null) return isoDateStr;
+
+            Calendar calVenda = Calendar.getInstance();
+            calVenda.setTime(data);
+
+            Calendar calHoje = Calendar.getInstance();
+
+            SimpleDateFormat horaFmt = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            String horaStr = horaFmt.format(data);
+
+            boolean mesmoAno = calVenda.get(Calendar.YEAR) == calHoje.get(Calendar.YEAR);
+            int diaVenda = calVenda.get(Calendar.DAY_OF_YEAR);
+            int diaHoje = calHoje.get(Calendar.DAY_OF_YEAR);
+
+            if (mesmoAno && diaVenda == diaHoje) {
+                return "Hoje às " + horaStr;
+            } else if (mesmoAno && diaVenda == diaHoje - 1) {
+                return "Ontem às " + horaStr;
+            } else {
+                SimpleDateFormat diaMesFmt = new SimpleDateFormat("dd/MM", Locale.getDefault());
+                return diaMesFmt.format(data) + " às " + horaStr;
+            }
+        } catch (Exception e) {
+            return isoDateStr;
+        }
+    }
+
+    private void confirmarEstornoVenda(Venda v, String operadorNome) {
+        if ("CANCELADA".equalsIgnoreCase(v.getStatus())) {
+            Toast.makeText(this, "Esta venda já está cancelada/estornada.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String valorFmt = String.format(Locale.GERMANY, "R$ %.2f", v.getTotalCentavos() / 100.0);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Estornar Venda #" + v.getId())
+                .setMessage("Deseja realmente estornar/cancelar esta venda no valor de " + valorFmt + "?\n\n" +
+                        "Operador: " + operadorNome + "\n" +
+                        "Data: " + formatarDataAmigavel(v.getDataHora()) + "\n\n" +
+                        "⚠️ O status da venda passará para CANCELADA e todos os itens retornarão automaticamente ao estoque de produtos.")
+                .setPositiveButton("Sim, Cancelar Venda", (dialog, which) -> {
+                    if (vendaService == null) inicializarDependencias();
+                    boolean sucesso = vendaService.estornarVenda(v.getId());
+                    if (sucesso) {
+                        Toast.makeText(MainActivity.this, "Venda #" + v.getId() + " cancelada! Estoque recomposto.", Toast.LENGTH_LONG).show();
+                        atualizarDadosVendas();
+                        if (activeTab == 2) atualizarDadosRelatorios();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Erro ao estornar venda #" + v.getId(), Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Voltar", null)
+                .show();
     }
 
     // ==========================================
@@ -322,14 +429,39 @@ public class MainActivity extends AppCompatActivity {
                 for (Venda v : vendasRecentes) {
                     View itemView = inflater.inflate(R.layout.item_venda_recente, containerVendasRecentes, false);
                     TextView tvId = itemView.findViewById(R.id.tvVendaId);
+                    TextView tvOperador = itemView.findViewById(R.id.tvVendaOperador);
                     TextView tvData = itemView.findViewById(R.id.tvVendaData);
                     TextView tvTotal = itemView.findViewById(R.id.tvVendaTotal);
                     TextView tvStatus = itemView.findViewById(R.id.tvVendaStatus);
 
+                    Funcionario op = (funcionarioRepository != null && v.getFuncionarioId() > 0)
+                            ? funcionarioRepository.buscarPorId(v.getFuncionarioId()) : null;
+                    String nomeOperador = (op != null) ? op.getNome() : ("Operador #" + v.getFuncionarioId());
+
                     tvId.setText("Venda #" + v.getId());
-                    tvData.setText(v.getDataHora());
-                    tvTotal.setText(String.format(Locale.GERMANY, "R$ %.2f", v.getTotalCentavos() / 100.0));
-                    tvStatus.setText(v.getStatus());
+                    if (tvOperador != null) {
+                        tvOperador.setText(" • " + nomeOperador);
+                    }
+                    tvData.setText(formatarDataAmigavel(v.getDataHora()));
+
+                    boolean cancelada = "CANCELADA".equalsIgnoreCase(v.getStatus());
+                    if (cancelada) {
+                        tvTotal.setText(String.format(Locale.GERMANY, "R$ %.2f", v.getTotalCentavos() / 100.0));
+                        tvTotal.setPaintFlags(tvTotal.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        tvTotal.setTextColor(Color.parseColor("#9CA3AF"));
+                        tvStatus.setText("CANCELADA");
+                        tvStatus.setBackgroundResource(R.drawable.badge_danger);
+                        tvStatus.setTextColor(Color.parseColor("#991B1B"));
+                    } else {
+                        tvTotal.setText(String.format(Locale.GERMANY, "R$ %.2f", v.getTotalCentavos() / 100.0));
+                        tvTotal.setPaintFlags(tvTotal.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                        tvTotal.setTextColor(Color.parseColor("#059669"));
+                        tvStatus.setText(v.getStatus() != null ? v.getStatus() : "CONCLUÍDA");
+                        tvStatus.setBackgroundResource(R.drawable.badge_success);
+                        tvStatus.setTextColor(Color.parseColor("#065F46"));
+                    }
+
+                    itemView.setOnClickListener(vClick -> confirmarEstornoVenda(v, nomeOperador));
 
                     containerVendasRecentes.addView(itemView);
 
@@ -436,6 +568,8 @@ public class MainActivity extends AppCompatActivity {
                         tvStatus.setTextColor(Color.parseColor(f.isAtivo() ? "#065F46" : "#B91C1C"));
                     }
 
+                    itemView.setOnClickListener(vClick -> abrirOpcoesFuncionario(f));
+
                     containerFuncionarios.addView(itemView);
 
                     View divider = new View(this);
@@ -447,6 +581,42 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             Toast.makeText(this, "Erro ao listar funcionários: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void abrirOpcoesFuncionario(Funcionario f) {
+        String[] opcoes = new String[]{
+                "🔑 Gerar Código de Recuperação de Senha",
+                f.isAtivo() ? "⛔ Desativar Colaborador" : "✅ Ativar Colaborador"
+        };
+
+        new AlertDialog.Builder(this)
+                .setTitle(f.getNome() + " (@" + f.getUsuario() + ")")
+                .setItems(opcoes, (dialog, which) -> {
+                    if (which == 0) {
+                        String novoCodigo = gerarCodigoConfirmacao();
+                        boolean sucesso = funcionarioRepository.gerarNovoCodigoConfirmacao(f.getId(), novoCodigo);
+                        if (sucesso) {
+                            atualizarDadosFuncionarios();
+                            new AlertDialog.Builder(MainActivity.this)
+                                    .setTitle("🔑 Código de Recuperação Gerado")
+                                    .setMessage("Colaborador: " + f.getNome() + " (@" + f.getUsuario() + ")\n\n" +
+                                            "Novo código de 6 dígitos gerado para redefinição de senha:\n\n" +
+                                            "       ▶   " + novoCodigo + "   ◀\n\n" +
+                                            "Entregue este código ao funcionário. Ele deverá informá-lo na opção 'Primeiro acesso ou esqueceu a senha?' na interface web para redefinir sua senha pessoal.")
+                                    .setPositiveButton("Entendido", null)
+                                    .show();
+                        } else {
+                            Toast.makeText(MainActivity.this, "Erro ao gerar código de recuperação.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else if (which == 1) {
+                        f.setAtivo(!f.isAtivo());
+                        funcionarioRepository.salvar(f);
+                        atualizarDadosFuncionarios();
+                        Toast.makeText(MainActivity.this, f.isAtivo() ? "Colaborador ativado!" : "Colaborador desativado!", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
     }
 
     private String gerarCodigoConfirmacao() {
@@ -567,9 +737,15 @@ public class MainActivity extends AppCompatActivity {
         tvServidorStatus.setText(String.format("Status: Ativo e Escutando na Porta %d", porta));
         tvServidorUrlLocal.setText(String.format("IP Local: http://%s:%d", ip, porta));
         tvServidorUrlMdns.setText(String.format("Hostname mDNS: http://pocketpdv.local:%d", porta));
+        if (tvSwaggerUrl != null) {
+            tvSwaggerUrl.setText(String.format("http://%s:%d/swagger-ui", (ip != null && !ip.isEmpty() && !ip.equals("127.0.0.1")) ? ip : "pocketpdv.local", porta));
+        }
 
         tvMdnsStatus.setText("MdnsHostResponder: Ativo (UDP Multicast 5353)");
         tvNsdStatus.setText("Serviço NSD: pocketpdv._http._tcp.local");
+
+        // Diagnóstico e Gestão de Bateria / Segundo Plano
+        atualizarStatusBateria();
 
         // Telemetria de Memória (PSS, Java Heap, Native Heap)
         long javaHeapUsed = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024);
@@ -608,6 +784,49 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return "127.0.0.1";
+    }
+
+    private void atualizarStatusBateria() {
+        if (tvBateriaStatus == null) return;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            String packageName = getPackageName();
+            if (pm != null && pm.isIgnoringBatteryOptimizations(packageName)) {
+                tvBateriaStatus.setText("Otimização de Bateria: Desativada (Modo Irrestrito)");
+                tvBateriaStatus.setTextColor(Color.parseColor("#059669"));
+                if (btnIgnorarOtimizacaoBateria != null) {
+                    btnIgnorarOtimizacaoBateria.setVisibility(View.GONE);
+                }
+            } else {
+                tvBateriaStatus.setText("Otimização de Bateria: Ativa (Pode pausar com a tela apagada)");
+                tvBateriaStatus.setTextColor(Color.parseColor("#D97706"));
+                if (btnIgnorarOtimizacaoBateria != null) {
+                    btnIgnorarOtimizacaoBateria.setVisibility(View.VISIBLE);
+                    btnIgnorarOtimizacaoBateria.setOnClickListener(v -> {
+                        try {
+                            Intent intent = new Intent();
+                            intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                            intent.setData(Uri.parse("package:" + packageName));
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            try {
+                                Intent fallbackIntent = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+                                startActivity(fallbackIntent);
+                            } catch (Exception ex) {
+                                Toast.makeText(MainActivity.this, "Abra as configurações de bateria manualmente.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            }
+        } else {
+            tvBateriaStatus.setText("Otimização de Bateria: N/A (Android < 6.0)");
+            tvBateriaStatus.setTextColor(Color.parseColor("#059669"));
+            if (btnIgnorarOtimizacaoBateria != null) {
+                btnIgnorarOtimizacaoBateria.setVisibility(View.GONE);
+            }
+        }
     }
 
     private static final int REQUEST_STORAGE_PERMISSION = 1001;
@@ -714,5 +933,40 @@ public class MainActivity extends AppCompatActivity {
         } else if (requestCode == REQUEST_STORAGE_PERMISSION) {
             Toast.makeText(this, "Permissão necessária para exportar na pasta PocketPDV", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private final EstoqueSseHub.VendaConcluidaListener vendaConcluidaListener = (vendaId, totalCentavos, operador, totalItens) -> {
+        runOnUiThread(() -> {
+            try {
+                if (activeTab == 0) {
+                    atualizarDadosVendas();
+                } else if (activeTab == 2) {
+                    atualizarDadosRelatorios();
+                }
+                double totalReais = totalCentavos / 100.0;
+                Toast.makeText(MainActivity.this,
+                        String.format(java.util.Locale.getDefault(),
+                                "🎉 Venda #%d (R$ %.2f) finalizada por %s (%d itens)",
+                                vendaId, totalReais, operador, totalItens),
+                        Toast.LENGTH_LONG).show();
+            } catch (Exception ignored) {}
+        });
+    };
+
+    private final EstoqueSseHub.EstoqueAtualizadoListener estoqueAtualizadoListener = (produtoId, novoEstoque) -> {
+        runOnUiThread(() -> {
+            try {
+                if (activeTab == 0) {
+                    atualizarDadosVendas();
+                }
+            } catch (Exception ignored) {}
+        });
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EstoqueSseHub.getInstance().removerVendaListener(vendaConcluidaListener);
+        EstoqueSseHub.getInstance().removerEstoqueListener(estoqueAtualizadoListener);
     }
 }

@@ -1,11 +1,22 @@
 package com.github.matheuscruzsouza.pocketpdv.domain.model;
 
+import com.github.matheuscruzsouza.nanospring.validation.NotBlank;
+import com.github.matheuscruzsouza.nanospring.validation.Size;
+
 public class Funcionario {
 
     private long id;
+
+    @NotBlank(message = "O nome é obrigatório")
+    @Size(min = 2, max = 100, message = "O nome deve ter entre 2 e 100 caracteres")
     private String nome;
+
     private String cargo;
+
+    @NotBlank(message = "O usuário é obrigatório")
+    @Size(min = 3, max = 30, message = "O usuário deve ter entre 3 e 30 caracteres")
     private String usuario;
+
     private boolean ativo;
     private String codigoConfirmacao;
     private String senha;

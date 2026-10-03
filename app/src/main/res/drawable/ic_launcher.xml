@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Fundo Verde Esmeralda com cantos arredondados (squircle) -->
+    <path
+        android:fillColor="#059669"
+        android:pathData="M 12,6 C 6,6 6,12 6,20 L 6,88 C 6,96 6,102 14,102 L 94,102 C 102,102 102,96 102,88 L 102,20 C 102,12 102,6 94,6 Z" />
+
+    <!-- Brilho superior sutil -->
+    <path
+        android:fillColor="#10B981"
+        android:pathData="M 14,6 L 94,6 C 102,6 102,12 102,20 L 102,24 L 6,24 L 6,20 C 6,12 6,6 14,6 Z" />
+
+    <!-- Papel do Recibo saindo no topo -->
+    <path
+        android:fillColor="#F3F4F6"
+        android:pathData="M 38,20 L 70,20 L 70,36 L 66,32 L 62,36 L 58,32 L 54,36 L 50,32 L 46,36 L 42,32 L 38,36 Z" />
+
+    <!-- Linhas no Recibo -->
+    <path
+        android:fillColor="#9CA3AF"
+        android:pathData="M 42,24 L 66,24 L 66,26 L 42,26 Z M 42,28 L 58,28 L 58,30 L 42,30 Z" />
+
+    <!-- Corpo do Terminal PDV -->
+    <path
+        android:fillColor="#1F2937"
+        android:pathData="M 30,32 L 78,32 C 82,32 84,34 84,38 L 84,86 C 84,90 82,92 78,92 L 30,92 C 26,92 24,90 24,86 L 24,38 C 24,34 26,32 30,32 Z" />
+
+    <!-- Tela do PDV -->
+    <path
+        android:fillColor="#111827"
+        android:pathData="M 30,38 L 78,38 L 78,62 L 30,62 Z" />
+
+    <!-- Gráfico / Valor na Tela (Verde neon) -->
+    <path
+        android:fillColor="#34D399"
+        android:pathData="M 34,44 L 54,44 L 54,48 L 34,48 Z M 34,52 L 46,52 L 46,55 L 34,55 Z M 60,42 L 74,42 C 75,42 75,43 75,44 L 75,56 C 75,57 75,58 74,58 L 60,58 Z" />
+
+    <!-- Símbolo de Moeda / Check na Tela -->
+    <path
+        android:fillColor="#111827"
+        android:pathData="M 64,48 L 67,52 L 72,45 L 73,46 L 67,54 L 63,49 Z" />
+
+    <!-- Teclado Numérico do PDV (Linha 1) -->
+    <path
+        android:fillColor="#374151"
+        android:pathData="M 32,68 L 42,68 L 42,73 L 32,73 Z M 49,68 L 59,68 L 59,73 L 49,73 Z M 66,68 L 76,68 L 76,73 L 66,73 Z" />
+
+    <!-- Teclado Numérico do PDV (Linha 2) -->
+    <path
+        android:fillColor="#374151"
+        android:pathData="M 32,76 L 42,76 L 42,81 L 32,81 Z M 49,76 L 59,76 L 59,81 L 49,81 Z M 66,76 L 76,76 L 76,81 L 66,81 Z" />
+
+    <!-- Botões de Ação do PDV (Cancelar Vermelho, Confirmar Verde) -->
+    <path
+        android:fillColor="#EF4444"
+        android:pathData="M 32,84 L 42,84 L 42,88 L 32,88 Z" />
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M 49,84 L 59,84 L 59,88 L 49,88 Z" />
+    <path
+        android:fillColor="#10B981"
+        android:pathData="M 66,84 L 76,84 L 76,88 L 66,88 Z" />
+
+</vector>

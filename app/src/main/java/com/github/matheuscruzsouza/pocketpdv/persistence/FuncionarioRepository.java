@@ -54,6 +54,19 @@ public class FuncionarioRepository {
         return lista;
     }
 
+    public List<Funcionario> listarAtivos() {
+        List<Funcionario> lista = new ArrayList<>();
+        SQLiteDatabase db = getReadableDb();
+        try (Cursor c = db.query("funcionarios", null, "ativo = 1", null, null, null, "nome ASC")) {
+            if (c != null && c.moveToFirst()) {
+                do {
+                    lista.add(mapCursorToFuncionario(c));
+                } while (c.moveToNext());
+            }
+        }
+        return lista;
+    }
+
     public Funcionario buscarPorId(long id) {
         SQLiteDatabase db = getReadableDb();
         try (Cursor c = db.query("funcionarios", null, "id = ?", new String[]{String.valueOf(id)}, null, null, null)) {
@@ -92,6 +105,16 @@ public class FuncionarioRepository {
         cv.putNull("codigo_confirmacao");
 
         int rows = db.update("funcionarios", cv, "id = ?", new String[]{String.valueOf(f.getId())});
+        return rows > 0;
+    }
+
+    public boolean gerarNovoCodigoConfirmacao(long id, String novoCodigo) {
+        if (id <= 0 || novoCodigo == null || novoCodigo.trim().isEmpty()) return false;
+        SQLiteDatabase db = getWritableDb();
+        ContentValues cv = new ContentValues();
+        cv.put("codigo_confirmacao", novoCodigo.trim());
+        cv.put("senha_definida", 0);
+        int rows = db.update("funcionarios", cv, "id = ?", new String[]{String.valueOf(id)});
         return rows > 0;
     }
 

@@ -56,6 +56,14 @@ public class VendaRepository {
         return id;
     }
 
+    public boolean cancelarVenda(long vendaId, SQLiteDatabase dbExterno) {
+        SQLiteDatabase db = (dbExterno != null) ? dbExterno : getWritableDb();
+        ContentValues values = new ContentValues();
+        values.put("status", "CANCELADA");
+        int rows = db.update("vendas", values, "id = ? AND status != 'CANCELADA'", new String[]{String.valueOf(vendaId)});
+        return rows > 0;
+    }
+
     public Venda buscarPorId(long id) {
         SQLiteDatabase db = getReadableDb();
         try (Cursor cursor = db.query(
@@ -100,7 +108,7 @@ public class VendaRepository {
 
         String sql = "SELECT v.id, v.data_hora, v.total_centavos, v.status, " +
                      "COALESCE(v.funcionario_id, 1) AS funcionario_id, " +
-                     "COALESCE(f.nome, 'Carlos Silva') AS funcionario_nome, " +
+                     "COALESCE(f.nome, 'Operador') AS funcionario_nome, " +
                      "COALESCE(SUM(iv.quantidade), 0) AS total_itens " +
                      "FROM vendas v " +
                      "LEFT JOIN funcionarios f ON f.id = v.funcionario_id " +

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-09-29T22:15:45" hostname="Matheus-PC" time="0.006">
+<testsuite name="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-03T20:33:42" hostname="Matheus-PC" time="0.017">
   <properties/>
-  <testcase name="testIncrementarMesmoItem" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.003"/>
-  <testcase name="testAdicionarItem" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.001"/>
+  <testcase name="testIncrementarMesmoItem" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.002"/>
+  <testcase name="testAdicionarItem" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.013"/>
   <testcase name="testRemoverItem" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.0"/>
   <testcase name="testLimparCarrinho" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.0"/>
   <testcase name="testMultiplosItens" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.001"/>

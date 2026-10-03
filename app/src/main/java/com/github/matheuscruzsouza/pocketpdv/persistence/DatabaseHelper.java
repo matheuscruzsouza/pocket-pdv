@@ -63,6 +63,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // SDD Section 4.1: SQLite PRAGMA Protocol
         db.enableWriteAheadLogging();
         db.setForeignKeyConstraintsEnabled(true);
+        executePragma(db, "PRAGMA busy_timeout = 5000;");
         executePragma(db, "PRAGMA journal_mode = WAL;");
         executePragma(db, "PRAGMA synchronous = NORMAL;");
         executePragma(db, "PRAGMA foreign_keys = ON;");

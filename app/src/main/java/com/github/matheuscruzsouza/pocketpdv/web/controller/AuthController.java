@@ -5,22 +5,40 @@ import com.github.matheuscruzsouza.nanospring.annotation.GetMethod;
 import com.github.matheuscruzsouza.nanospring.annotation.PostMethod;
 import com.github.matheuscruzsouza.nanospring.annotation.RequestParam;
 import com.github.matheuscruzsouza.nanospring.annotation.RestController;
+import com.github.matheuscruzsouza.nanospring.openapi.annotation.ApiResponse;
+import com.github.matheuscruzsouza.nanospring.openapi.annotation.Operation;
+import com.github.matheuscruzsouza.nanospring.openapi.annotation.Parameter;
+import com.github.matheuscruzsouza.nanospring.openapi.annotation.Tag;
 import com.github.matheuscruzsouza.pocketpdv.domain.model.Funcionario;
+import com.github.matheuscruzsouza.pocketpdv.domain.model.Session;
 import com.github.matheuscruzsouza.pocketpdv.persistence.FuncionarioRepository;
 import com.github.matheuscruzsouza.pocketpdv.service.PocketPdvService;
+import com.github.matheuscruzsouza.pocketpdv.service.SessionService;
+import com.github.matheuscruzsouza.pocketpdv.web.interceptor.AuthInterceptor;
 import com.github.matheuscruzsouza.pocketpdv.web.view.HtmlTemplates;
 
+import fi.iki.elonen.NanoHTTPD;
+
+@Tag(name = "Autenticação", description = "Endpoints de login e controle de acesso dos operadores")
 @RestController("/login")
 public class AuthController {
 
     @Autowired
     private FuncionarioRepository funcionarioRepository;
 
+    @Autowired
+    private SessionService sessionService;
+
     public AuthController() {
     }
 
     public AuthController(FuncionarioRepository funcionarioRepository) {
         this.funcionarioRepository = funcionarioRepository;
+    }
+
+    public AuthController(FuncionarioRepository funcionarioRepository, SessionService sessionService) {
+        this.funcionarioRepository = funcionarioRepository;
+        this.sessionService = sessionService;
     }
 
     private FuncionarioRepository getFuncionarioRepository() {
@@ -34,15 +52,31 @@ public class AuthController {
         return funcionarioRepository;
     }
 
+    private SessionService getSessionService() {
+        if (sessionService != null) return sessionService;
+        if (PocketPdvService.getInstance() != null) {
+            sessionService = PocketPdvService.getInstance().getSessionService();
+        }
+        if (sessionService == null) {
+            sessionService = new SessionService();
+        }
+        return sessionService;
+    }
+
+    @Operation(summary = "Exibir formulário de login", description = "Renderiza página HTML com campos de usuário e senha")
+    @ApiResponse(responseCode = 200, description = "Página de login renderizada")
     @GetMethod(value = "", mimeType = "text/html")
-    public String loginPage() {
+    public Object loginPage() {
         return HtmlTemplates.paginaLogin(null, null);
     }
 
+    @Operation(summary = "Autenticar operador", description = "Valida usuário e senha do colaborador e cria sessão server-side com cookie HttpOnly")
+    @ApiResponse(responseCode = 302, description = "Autenticado com sucesso; redireciona para o PDV com cookie de sessão")
+    @ApiResponse(responseCode = 401, description = "Credenciais inválidas ou colaborador inativo")
     @PostMethod(value = "", mimeType = "text/html")
-    public String autenticar(
-            @RequestParam("usuario") String usuario,
-            @RequestParam("senha") String senha) {
+    public Object autenticar(
+            @Parameter(description = "Nome de usuário do operador", example = "operador") @RequestParam("usuario") String usuario,
+            @Parameter(description = "Senha do operador", example = "123456") @RequestParam("senha") String senha) {
 
         if (usuario == null || usuario.trim().isEmpty() || senha == null) {
             return HtmlTemplates.paginaLogin("Informe usuário e senha.", null);
@@ -63,10 +97,44 @@ public class AuthController {
         }
 
         if (f.getSenha() != null && f.getSenha().equals(senha.trim())) {
-            return "<!DOCTYPE html><html><head><meta http-equiv=\"refresh\" content=\"0;url=/pdv\"></head>" +
-                   "<body><script>window.location.href='/pdv';</script><p>Acessando PDV...</p></body></html>";
+            Session session = getSessionService().criarSessao(f);
+            String token = session != null ? session.getId() : "";
+
+            NanoHTTPD.Response response = NanoHTTPD.newFixedLengthResponse(
+                    NanoHTTPD.Response.Status.REDIRECT,
+                    "text/html",
+                    "<!DOCTYPE html><html><head><meta charset=\"UTF-8\">" +
+                    "<meta http-equiv=\"refresh\" content=\"0;url=/pdv\">" +
+                    "<script>window.location.href='/pdv';</script>" +
+                    "</head>" +
+                    "<body><p>Acessando PDV como " + (f.getNome() != null ? f.getNome() : f.getUsuario()) + "...</p></body></html>"
+            );
+            response.addHeader("Location", "/pdv");
+            response.addHeader("Set-Cookie", SessionService.COOKIE_NAME + "=" + token + "; Path=/; HttpOnly; SameSite=Strict; Max-Age=86400");
+            return response;
         }
 
         return HtmlTemplates.paginaLogin("Senha incorreta. Tente novamente.", null);
+    }
+
+    @Operation(summary = "Encerrar sessão", description = "Invalida a sessão ativa do operador e expira o cookie")
+    @ApiResponse(responseCode = 302, description = "Sessão encerrada; redireciona para a página de login")
+    @GetMethod(value = "/logout", mimeType = "text/html")
+    public Object logout(NanoHTTPD.IHTTPSession httpSession) {
+        String sessionId = AuthInterceptor.extrairSessionId(httpSession);
+        if (sessionId != null) {
+            getSessionService().encerrarSessao(sessionId);
+        }
+        NanoHTTPD.Response response = NanoHTTPD.newFixedLengthResponse(
+                NanoHTTPD.Response.Status.REDIRECT,
+                "text/html",
+                "<!DOCTYPE html><html><head><meta charset=\"UTF-8\">" +
+                "<meta http-equiv=\"refresh\" content=\"0;url=/login\">" +
+                "<script>window.location.href='/login';</script>" +
+                "</head><body><p>Sessão encerrada. Redirecionando...</p></body></html>"
+        );
+        response.addHeader("Location", "/login");
+        response.addHeader("Set-Cookie", SessionService.COOKIE_NAME + "=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0");
+        return response;
     }
 }
