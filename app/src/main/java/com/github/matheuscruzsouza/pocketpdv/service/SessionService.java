@@ -1,6 +1,7 @@
 package com.github.matheuscruzsouza.pocketpdv.service;
 
 import com.github.matheuscruzsouza.nanospring.annotation.Service;
+import com.github.matheuscruzsouza.pocketpdv.domain.model.Carrinho;
 import com.github.matheuscruzsouza.pocketpdv.domain.model.Funcionario;
 import com.github.matheuscruzsouza.pocketpdv.domain.model.Session;
 
@@ -15,6 +16,7 @@ public class SessionService {
     private static final long DURACAO_PADRAO_MILLIS = 24 * 60 * 60 * 1000L; // 24 horas
 
     private final Map<String, Session> sessoes = new ConcurrentHashMap<>();
+    private final Map<String, Carrinho> carrinhosPorSessao = new ConcurrentHashMap<>();
 
     public Session criarSessao(Funcionario funcionario) {
         if (funcionario == null) {
@@ -42,26 +44,46 @@ public class SessionService {
         if (sessionId == null || sessionId.trim().isEmpty()) {
             return null;
         }
-        Session session = sessoes.get(sessionId.trim());
+        String chave = sessionId.trim();
+        Session session = sessoes.get(chave);
         if (session == null) {
+            carrinhosPorSessao.remove(chave);
             return null;
         }
         if (session.isExpired()) {
-            sessoes.remove(sessionId.trim());
+            sessoes.remove(chave);
+            carrinhosPorSessao.remove(chave);
             return null;
         }
         return session;
     }
 
+    public Carrinho obterCarrinho(String sessionId) {
+        if (sessionId == null || sessionId.trim().isEmpty()) {
+            return new Carrinho();
+        }
+        String chave = sessionId.trim();
+        return carrinhosPorSessao.computeIfAbsent(chave, k -> new Carrinho());
+    }
+
     public void encerrarSessao(String sessionId) {
         if (sessionId != null && !sessionId.trim().isEmpty()) {
-            sessoes.remove(sessionId.trim());
+            String chave = sessionId.trim();
+            sessoes.remove(chave);
+            carrinhosPorSessao.remove(chave);
         }
     }
 
     public void limparExpiradas() {
         long now = System.currentTimeMillis();
-        sessoes.entrySet().removeIf(entry -> entry.getValue() == null || entry.getValue().getExpiresAt() < now);
+        sessoes.entrySet().removeIf(entry -> {
+            boolean expirada = entry.getValue() == null || entry.getValue().getExpiresAt() < now;
+            if (expirada && entry.getKey() != null) {
+                carrinhosPorSessao.remove(entry.getKey());
+            }
+            return expirada;
+        });
+        carrinhosPorSessao.keySet().removeIf(key -> !sessoes.containsKey(key));
     }
 
     public int getQuantidadeSessoesAtivas() {

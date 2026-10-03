@@ -96,4 +96,43 @@ public class SessionServiceTest {
         assertNull(sessionService.obterSessao(s1.getId()));
         assertNotNull(sessionService.obterSessao(s2.getId()));
     }
+
+    @Test
+    public void testIsolamentoCarrinhosEntreSessoes() {
+        Session s1 = sessionService.criarSessao(operador);
+        Funcionario outro = new Funcionario(2L, "Outro", "Operador", "outro", true);
+        Session s2 = sessionService.criarSessao(outro);
+
+        com.github.matheuscruzsouza.pocketpdv.domain.model.Carrinho c1 = sessionService.obterCarrinho(s1.getId());
+        com.github.matheuscruzsouza.pocketpdv.domain.model.Carrinho c2 = sessionService.obterCarrinho(s2.getId());
+
+        assertNotNull(c1);
+        assertNotNull(c2);
+        assertTrue(c1 != c2);
+
+        com.github.matheuscruzsouza.pocketpdv.domain.model.Produto p =
+                new com.github.matheuscruzsouza.pocketpdv.domain.model.Produto(1, "123", "Coca", 500, 10);
+        c1.adicionar(p, 2);
+
+        assertEquals(1, c1.getItens().size());
+        assertEquals(1000, c1.getTotalCentavos());
+        assertEquals(0, c2.getItens().size());
+        assertEquals(0, c2.getTotalCentavos());
+    }
+
+    @Test
+    public void testCarrinhoDescartadoNoEncerramentoDaSessao() {
+        Session s1 = sessionService.criarSessao(operador);
+        com.github.matheuscruzsouza.pocketpdv.domain.model.Carrinho c1 = sessionService.obterCarrinho(s1.getId());
+        com.github.matheuscruzsouza.pocketpdv.domain.model.Produto p =
+                new com.github.matheuscruzsouza.pocketpdv.domain.model.Produto(1, "123", "Coca", 500, 10);
+        c1.adicionar(p, 1);
+
+        sessionService.encerrarSessao(s1.getId());
+
+        // Nova chamada para id encerrado gera novo carrinho vazio
+        com.github.matheuscruzsouza.pocketpdv.domain.model.Carrinho cNovo = sessionService.obterCarrinho(s1.getId());
+        assertTrue(c1 != cNovo);
+        assertTrue(cNovo.isVazio());
+    }
 }

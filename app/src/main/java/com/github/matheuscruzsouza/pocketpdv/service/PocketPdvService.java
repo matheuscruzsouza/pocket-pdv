@@ -34,8 +34,6 @@ public class PocketPdvService extends Service {
     private static PocketPdvService instance;
     private Server server;
     private DatabaseHelper dbHelper;
-    private final java.util.Map<String, Carrinho> carrinhosPorOperador = new java.util.concurrent.ConcurrentHashMap<>();
-    private Carrinho carrinho;
 
     private PowerManager.WakeLock wakeLock;
     private WifiManager.WifiLock wifiLock;
@@ -65,13 +63,8 @@ public class PocketPdvService extends Service {
         return sessionService;
     }
 
-    public Carrinho getCarrinho() {
-        return getCarrinho("operador");
-    }
-
-    public Carrinho getCarrinho(String operador) {
-        String chave = (operador != null && !operador.trim().isEmpty()) ? operador.trim().toLowerCase() : "operador";
-        return carrinhosPorOperador.computeIfAbsent(chave, k -> new Carrinho());
+    public Carrinho getCarrinho(String sessionId) {
+        return getSessionService().obterCarrinho(sessionId);
     }
 
     @Override
@@ -85,9 +78,8 @@ public class PocketPdvService extends Service {
             // Inicializa ambiente do nano-spring
             Environment.init(this);
 
-            // Banco de dados e carrinho
+            // Banco de dados
             dbHelper = new DatabaseHelper(this);
-            carrinho = new Carrinho();
 
             // Servidor nano-spring escaneando com.github.matheuscruzsouza.pocketpdv
             server = new Server(this, PORT, "com.github.matheuscruzsouza.pocketpdv");
@@ -97,7 +89,6 @@ public class PocketPdvService extends Service {
             server.registerSingleton(Context.class, this);
             server.registerSingleton(DatabaseHelper.class, dbHelper);
             server.registerSingleton(SQLiteDatabase.class, dbHelper.getWritableDatabase());
-            server.registerSingleton(Carrinho.class, carrinho);
             server.registerSingleton(SessionService.class, sessionService);
 
             Log.i(TAG, "NanoSpring Server rodando na porta " + PORT);

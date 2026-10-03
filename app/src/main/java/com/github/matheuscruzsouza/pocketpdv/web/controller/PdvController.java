@@ -48,26 +48,22 @@ public class PdvController {
     private RelatorioService relatorioService;
 
     @Autowired
-    private Carrinho carrinho;
-
-    @Autowired
     private SessionService sessionService;
 
     public PdvController() {
     }
 
     public PdvController(EstoqueService estoqueService, VendaService vendaService,
-                         RelatorioService relatorioService, Carrinho carrinho) {
-        this(estoqueService, vendaService, relatorioService, carrinho, null);
+                         RelatorioService relatorioService) {
+        this(estoqueService, vendaService, relatorioService, null);
     }
 
     public PdvController(EstoqueService estoqueService, VendaService vendaService,
-                         RelatorioService relatorioService, Carrinho carrinho,
+                         RelatorioService relatorioService,
                          SessionService sessionService) {
         this.estoqueService = estoqueService;
         this.vendaService = vendaService;
         this.relatorioService = relatorioService;
-        this.carrinho = carrinho;
         this.sessionService = sessionService;
     }
 
@@ -89,14 +85,11 @@ public class PdvController {
         return sService != null ? sService.obterSessao(sessionId) : null;
     }
 
-    private Carrinho getCarrinho(String operador) {
-        if (PocketPdvService.getInstance() != null) {
-            return PocketPdvService.getInstance().getCarrinho(operador);
+    private Carrinho getCarrinho(Session sessao) {
+        if (sessao == null) {
+            return new Carrinho();
         }
-        if (carrinho == null) {
-            carrinho = new Carrinho();
-        }
-        return carrinho;
+        return getSessionService().obterCarrinho(sessao.getId());
     }
 
     private EstoqueService getEstoqueService() {
@@ -170,7 +163,7 @@ public class PdvController {
         if (getFuncionarioRepository() != null) {
             op = getFuncionarioRepository().buscarPorUsuario(usuario);
         }
-        Carrinho c = getCarrinho(usuario);
+        Carrinho c = getCarrinho(sessaoAtiva);
         return HtmlTemplates.paginaPdv(
                 getEstoqueService() != null ? getEstoqueService().listarCatalogo() : java.util.Collections.emptyList(),
                 c, op, null, null);
@@ -219,7 +212,7 @@ public class PdvController {
         }
 
         String op = sessaoAtiva.getUsuario();
-        Carrinho c = getCarrinho(op);
+        Carrinho c = getCarrinho(sessaoAtiva);
 
         if (produtoId > 0 && getEstoqueService() != null) {
             Produto produto = getEstoqueService().buscarPorId(produtoId);
@@ -275,7 +268,7 @@ public class PdvController {
         }
 
         String op = sessaoAtiva.getUsuario();
-        Carrinho c = getCarrinho(op);
+        Carrinho c = getCarrinho(sessaoAtiva);
 
         if (produtoId > 0 && c != null) {
             c.diminuir(produtoId, quantidade);
@@ -309,7 +302,7 @@ public class PdvController {
         }
 
         String op = sessaoAtiva.getUsuario();
-        Carrinho c = getCarrinho(op);
+        Carrinho c = getCarrinho(sessaoAtiva);
 
         String alertaHtml = "";
         if (codigo == null || codigo.isEmpty()) {
@@ -354,7 +347,7 @@ public class PdvController {
             return "";
         }
         String op = sessaoAtiva.getUsuario();
-        Carrinho c = getCarrinho(op);
+        Carrinho c = getCarrinho(sessaoAtiva);
         if (idStr != null && !idStr.isEmpty() && c != null) {
             try {
                 long produtoId = Long.parseLong(idStr);
@@ -374,7 +367,7 @@ public class PdvController {
             return "<div id=\"alerta-area\" hx-swap-oob=\"true\" style=\"background: #fee2e2; color: #b91c1c; padding: 0.75rem; border-radius: 0.375rem; margin-bottom: 1rem;\">Sessão expirada. Faça login novamente.</div>";
         }
         String op = sessaoAtiva.getUsuario();
-        Carrinho c = getCarrinho(op);
+        Carrinho c = getCarrinho(sessaoAtiva);
         if (c != null) {
             c.limpar();
             EstoqueSseHub.getInstance().notificarCarrinho(op, c);
@@ -415,7 +408,7 @@ public class PdvController {
         }
         try {
             String usuario = sessaoAtiva.getUsuario();
-            Carrinho c = getCarrinho(usuario);
+            Carrinho c = getCarrinho(sessaoAtiva);
 
             if (getVendaService() == null || c == null) {
                 return HtmlTemplates.fragmentoCheckoutErro("Serviço de venda indisponível.");
