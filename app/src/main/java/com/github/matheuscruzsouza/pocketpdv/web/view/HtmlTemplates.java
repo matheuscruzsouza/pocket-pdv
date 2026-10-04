@@ -204,9 +204,14 @@ public class HtmlTemplates {
     }
 
     public static String fragmentoCheckoutSucesso(Venda venda, String formaPagamento) {
+        String formaEscapada = com.github.matheuscruzsouza.pocketpdv.util.HtmlEscaper.escape(formaPagamento);
+        String dataHoraEscapada = com.github.matheuscruzsouza.pocketpdv.util.HtmlEscaper.escape(venda != null ? venda.getDataHora() : "");
+        long vendaId = venda != null ? venda.getId() : 0;
+        int totalCentavos = venda != null ? venda.getTotalCentavos() : 0;
+
         return "<div style=\"background: #d1fae5; color: #065f46; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; border: 1px solid #a7f3d0;\">\n" +
-                "  <div class=\"font-bold\" style=\"font-size: 1.1rem;\">✅ Venda #" + venda.getId() + " finalizada com sucesso!</div>\n" +
-                "  <div style=\"margin-top: 0.25rem;\">Total: <b>" + formatarDinheiro(venda.getTotalCentavos()) + "</b> &bull; Forma: <b>" + formaPagamento + "</b> &bull; Horário: " + venda.getDataHora() + "</div>\n" +
+                "  <div class=\"font-bold\" style=\"font-size: 1.1rem;\">✅ Venda #" + vendaId + " finalizada com sucesso!</div>\n" +
+                "  <div style=\"margin-top: 0.25rem;\">Total: <b>" + formatarDinheiro(totalCentavos) + "</b> &bull; Forma: <b>" + formaEscapada + "</b> &bull; Horário: " + dataHoraEscapada + "</div>\n" +
                 "</div>\n" +
                 "<tbody id=\"cart-table-body\" hx-swap-oob=\"true\">\n" +
                 "  <tr><td colspan=\"5\" class=\"text-center\" style=\"color: #9ca3af; padding: 2rem;\">Carrinho vazio</td></tr>\n" +
@@ -217,9 +222,10 @@ public class HtmlTemplates {
     }
 
     public static String fragmentoCheckoutErro(String erro) {
+        String erroEscapado = com.github.matheuscruzsouza.pocketpdv.util.HtmlEscaper.escape(erro);
         return "<div style=\"background: #fee2e2; color: #b91c1c; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; border: 1px solid #fca5a5;\">\n" +
                 "  <div class=\"font-bold\">❌ Erro ao finalizar venda</div>\n" +
-                "  <div>" + erro + "</div>\n" +
+                "  <div>" + erroEscapado + "</div>\n" +
                 "</div>";
     }
 }

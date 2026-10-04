@@ -332,14 +332,17 @@ public class PdvController {
         }
 
         if (produto == null) {
-            alertaHtml = "<div id=\"alerta-area\" hx-swap-oob=\"true\" style=\"background: #fee2e2; color: #b91c1c; padding: 0.75rem; border-radius: 0.375rem; margin-bottom: 1rem;\">Produto não encontrado com código: <b>" + codigo + "</b></div>";
+            String codigoEscapado = com.github.matheuscruzsouza.pocketpdv.util.HtmlEscaper.escape(codigo);
+            alertaHtml = "<div id=\"alerta-area\" hx-swap-oob=\"true\" style=\"background: #fee2e2; color: #b91c1c; padding: 0.75rem; border-radius: 0.375rem; margin-bottom: 1rem;\">Produto não encontrado com código: <b>" + codigoEscapado + "</b></div>";
         } else if (produto.getEstoque() <= 0) {
-            alertaHtml = "<div id=\"alerta-area\" hx-swap-oob=\"true\" style=\"background: #fee2e2; color: #b91c1c; padding: 0.75rem; border-radius: 0.375rem; margin-bottom: 1rem;\">Produto sem estoque: <b>" + produto.getNome() + "</b></div>";
+            String nomeEscapado = com.github.matheuscruzsouza.pocketpdv.util.HtmlEscaper.escape(produto.getNome());
+            alertaHtml = "<div id=\"alerta-area\" hx-swap-oob=\"true\" style=\"background: #fee2e2; color: #b91c1c; padding: 0.75rem; border-radius: 0.375rem; margin-bottom: 1rem;\">Produto sem estoque: <b>" + nomeEscapado + "</b></div>";
         } else {
             if (c != null) {
                 c.adicionar(produto, 1);
                 EstoqueSseHub.getInstance().notificarCarrinho(op, c);
-                alertaHtml = "<div id=\"alerta-area\" hx-swap-oob=\"true\" style=\"background: #d1fae5; color: #065f46; padding: 0.75rem; border-radius: 0.375rem; margin-bottom: 1rem;\">Item adicionado: <b>" + produto.getNome() + "</b> (" + HtmlTemplates.formatarDinheiro(produto.getPrecoCentavos()) + ")</div>";
+                String nomeEscapado = com.github.matheuscruzsouza.pocketpdv.util.HtmlEscaper.escape(produto.getNome());
+                alertaHtml = "<div id=\"alerta-area\" hx-swap-oob=\"true\" style=\"background: #d1fae5; color: #065f46; padding: 0.75rem; border-radius: 0.375rem; margin-bottom: 1rem;\">Item adicionado: <b>" + nomeEscapado + "</b> (" + HtmlTemplates.formatarDinheiro(produto.getPrecoCentavos()) + ")</div>";
             }
         }
 

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.github.matheuscruzsouza.pocketpdv.SessionServiceTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-04T01:49:34" hostname="Matheus-PC" time="0.023">
+<testsuite name="com.github.matheuscruzsouza.pocketpdv.SessionServiceTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-04T01:54:45" hostname="Matheus-PC" time="0.026">
   <properties/>
-  <testcase name="testSessaoExpiradaRetornaNullEEspurgada" classname="com.github.matheuscruzsouza.pocketpdv.SessionServiceTest" time="0.007"/>
-  <testcase name="testSessaoComFuncionarioNuloRetornaNull" classname="com.github.matheuscruzsouza.pocketpdv.SessionServiceTest" time="0.0"/>
-  <testcase name="testCriarEObterSessaoValida" classname="com.github.matheuscruzsouza.pocketpdv.SessionServiceTest" time="0.0"/>
+  <testcase name="testSessaoExpiradaRetornaNullEEspurgada" classname="com.github.matheuscruzsouza.pocketpdv.SessionServiceTest" time="0.009"/>
+  <testcase name="testSessaoComFuncionarioNuloRetornaNull" classname="com.github.matheuscruzsouza.pocketpdv.SessionServiceTest" time="0.001"/>
+  <testcase name="testCriarEObterSessaoValida" classname="com.github.matheuscruzsouza.pocketpdv.SessionServiceTest" time="0.002"/>
   <testcase name="testMultiplasSessoesConcorrentes" classname="com.github.matheuscruzsouza.pocketpdv.SessionServiceTest" time="0.001"/>
-  <testcase name="testIsolamentoCarrinhosEntreSessoes" classname="com.github.matheuscruzsouza.pocketpdv.SessionServiceTest" time="0.001"/>
-  <testcase name="testCarrinhoDescartadoNoEncerramentoDaSessao" classname="com.github.matheuscruzsouza.pocketpdv.SessionServiceTest" time="0.003"/>
+  <testcase name="testIsolamentoCarrinhosEntreSessoes" classname="com.github.matheuscruzsouza.pocketpdv.SessionServiceTest" time="0.002"/>
+  <testcase name="testCarrinhoDescartadoNoEncerramentoDaSessao" classname="com.github.matheuscruzsouza.pocketpdv.SessionServiceTest" time="0.0"/>
   <testcase name="testEncerrarSessaoInvalidaImediatamente" classname="com.github.matheuscruzsouza.pocketpdv.SessionServiceTest" time="0.001"/>
-  <testcase name="testSessaoInexistenteRetornaNull" classname="com.github.matheuscruzsouza.pocketpdv.SessionServiceTest" time="0.001"/>
+  <testcase name="testSessaoInexistenteRetornaNull" classname="com.github.matheuscruzsouza.pocketpdv.SessionServiceTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
