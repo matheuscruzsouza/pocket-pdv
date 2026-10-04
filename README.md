@@ -30,7 +30,7 @@ O aplicativo combina um **servidor web HTTP/SSE local embarcado** gerenciado via
   - Salvamento direto na raiz da memória interna em `/sdcard/PocketPDV/historico_vendas_YYYYMMDD_HHmmss.csv`.
   - Notificação de mídia via `MediaScannerConnection` para visibilidade imediata no PC ou explorador de arquivos.
 - **Painel do Servidor & Telemetria**:
-  - Status do servidor `nano-spring`, IP local na rede Wi-Fi, porta ativa, mDNS (`pocketpdv.local`) e consumo de RAM PSS em tempo real.
+  - Status real do servidor `nano-spring` (`Iniciando`, `Ativo`, `Falha ao iniciar` com a mensagem de erro, `Parado`), IP local na rede Wi-Fi, porta ativa, mDNS (`pocketpdv.local`) e consumo de RAM PSS em tempo real.
 
 ### 🌐 PDV Web Responsivo (Rede Local)
 - **Acesso Descentralizado**: Qualquer tablet, notebook, máquina de cartão inteligente ou smartphone conectado ao Wi-Fi acessa o PDV via navegador em `http://pocketpdv.local:8080`.
@@ -39,9 +39,12 @@ O aplicativo combina um **servidor web HTTP/SSE local embarcado** gerenciado via
 - **Atualização em Tempo Real via SSE (Server-Sent Events)**:
   - Hub reativo `EstoqueSseHub` que transmite eventos `estoque-atualizado` imediatamente quando uma venda é confirmada ou um estoque é ajustado.
   - Atualização automática dos badges de estoque nas telas web de todos os terminais conectados simultaneamente.
+  - Conexões protegidas contra vazamento: heartbeat (`: ping`) a cada 15 s remove clientes desconectados e o hub limita-se a 32 conexões simultâneas (as mais antigas são encerradas).
 - **Autenticação Segura & Primeiro Acesso**:
-  - Sessões gerenciadas por cookies HTTP.
+  - Sessões server-side gerenciadas por cookies HTTP (`HttpOnly`, `SameSite=Strict`).
+  - Logout somente via `POST /logout`, que invalida a sessão e o carrinho associado.
   - Tela de primeiro acesso (`/primeiro-acesso`) para ativação de novos colaboradores via código alfanumérico.
+- **Saída HTML segura**: valores vindos do usuário/banco são escapados com `HtmlEscaper` antes de serem renderizados (mitiga XSS armazenado).
 
 ---
 
@@ -81,6 +84,9 @@ flowchart TD
 1. **Zero Loopback Overhead**: A interface nativa Android consome diretamente os repositórios e serviços Java em memória, sem trafegar dados via socket HTTP local desnecessariamente.
 2. **SQLite WAL (Write-Ahead Logging)**: Leituras concorrentes do servidor web e da UI Android nunca bloqueiam gravações no banco de dados.
 3. **Limite Estrito de Memória**: O consumo total de memória RAM (PSS) deve permanecer abaixo de 40 MB durante a operação plena.
+4. **Instância Única do Banco**: `DatabaseHelper` é um singleton por processo (`DatabaseHelper.getInstance(context)`); serviço e Activity compartilham a mesma instância.
+5. **Dinheiro em centavos e formato pt-BR**: valores monetários são tratados em centavos e formatados via `MoneyParser.formatarDinheiro` (locale `pt-BR`).
+6. **Falha de inicialização explícita**: se o servidor não subir, o estado vira `FAILED`, a UI exibe o erro e o serviço não é reiniciado automaticamente (`START_NOT_STICKY`).
 
 ---
 
@@ -103,7 +109,7 @@ flowchart TD
 | `GET` | `/` | Redirecionamento condicional para `/login` ou `/pdv` |
 | `GET` | `/login` | Página de autenticação do operador |
 | `POST` | `/login` | Validação de credenciais e criação de sessão |
-| `GET` | `/logout` | Encerramento de sessão ativa |
+| `POST` | `/logout` | Encerramento de sessão ativa (invalida a sessão no servidor e expira o cookie; GET não é aceito) |
 | `GET` | `/primeiro-acesso` | Formulário para definir senha através do código de 6 dígitos |
 | `POST` | `/primeiro-acesso` | Confirmação de código e gravação da nova senha |
 | `GET` | `/pdv` | Painel operacional do PDV (produtos, carrinho e checkout) |

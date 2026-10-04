@@ -97,7 +97,7 @@
         <div class="feature-card">
           <div class="feature-icon">⚡</div>
           <h3>Atualização em Tempo Real (SSE)</h3>
-          <p>Server-Sent Events via EstoqueSseHub que sincroniza alterações de estoque em tempo real em todas as telas web conectadas.</p>
+          <p>Server-Sent Events via EstoqueSseHub que sincroniza alterações de estoque em tempo real em todas as telas web conectadas, com heartbeat de 15 s e limite de 32 conexões para evitar vazamento de memória.</p>
         </div>
 
         <div class="feature-card">
@@ -203,6 +203,12 @@
               <td><code>/login</code></td>
               <td>Página de login do operador de caixa</td>
               <td>HTML</td>
+            </tr>
+            <tr>
+              <td><span class="badge-method badge-post">POST</span></td>
+              <td><code>/logout</code></td>
+              <td>Encerra a sessão no servidor e expira o cookie (somente POST)</td>
+              <td>HTML / Redirect</td>
             </tr>
             <tr>
               <td><span class="badge-method badge-post">POST</span></td>

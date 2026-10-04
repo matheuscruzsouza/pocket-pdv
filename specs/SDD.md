@@ -159,6 +159,7 @@ INDEX: idx_vendas_data ON vendas(data_hora)
 | --- | --- | --- | --- | --- | --- |
 | `GET` | `/login` | N/A | None | `text/html` | Full Page Render |
 | `POST` | `/login` | `form-urlencoded` | None | `302 / HX-Redirect` | Document Redirect |
+| `POST` | `/logout` | N/A | Session Cookie (optional) | `302` + `Set-Cookie: Max-Age=0` | Invalida sessão server-side; GET não é aceito |
 | `GET` | `/pdv` | N/A | Session Cookie | `text/html` | Full Page Shell |
 | `POST` | `/pdv/carrinho/item` | `form-urlencoded` | Session Cookie | `text/html` fragment | `#cart-table-body`, `#cart-total` (OOB Swap) |
 | `DELETE` | `/pdv/carrinho/item/{id}` | N/A | Session Cookie | `text/html` fragment | `#cart-table-body`, `#cart-total` (OOB Swap) |
