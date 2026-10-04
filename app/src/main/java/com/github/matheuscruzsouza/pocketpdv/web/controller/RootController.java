@@ -2,6 +2,7 @@ package com.github.matheuscruzsouza.pocketpdv.web.controller;
 
 import com.github.matheuscruzsouza.nanospring.annotation.Autowired;
 import com.github.matheuscruzsouza.nanospring.annotation.GetMethod;
+import com.github.matheuscruzsouza.nanospring.annotation.PostMethod;
 import com.github.matheuscruzsouza.nanospring.annotation.RestController;
 import com.github.matheuscruzsouza.pocketpdv.service.PocketPdvService;
 import com.github.matheuscruzsouza.pocketpdv.service.SessionService;
@@ -32,7 +33,7 @@ public class RootController {
                "<body><script>window.location.href='/login';</script></body></html>";
     }
 
-    @GetMethod(value = "/logout", mimeType = "text/html")
+    @PostMethod(value = "/logout", mimeType = "text/html")
     public Object logout(NanoHTTPD.IHTTPSession session) {
         String sessionId = AuthInterceptor.extrairSessionId(session);
         if (sessionId != null) {

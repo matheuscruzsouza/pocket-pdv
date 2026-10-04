@@ -14,7 +14,6 @@ import com.github.matheuscruzsouza.pocketpdv.domain.model.Session;
 import com.github.matheuscruzsouza.pocketpdv.persistence.FuncionarioRepository;
 import com.github.matheuscruzsouza.pocketpdv.service.PocketPdvService;
 import com.github.matheuscruzsouza.pocketpdv.service.SessionService;
-import com.github.matheuscruzsouza.pocketpdv.web.interceptor.AuthInterceptor;
 import com.github.matheuscruzsouza.pocketpdv.web.view.HtmlTemplates;
 
 import fi.iki.elonen.NanoHTTPD;
@@ -122,26 +121,5 @@ public class AuthController {
         }
 
         return HtmlTemplates.paginaLogin("Senha incorreta. Tente novamente.", null);
-    }
-
-    @Operation(summary = "Encerrar sessão", description = "Invalida a sessão ativa do operador e expira o cookie")
-    @ApiResponse(responseCode = 302, description = "Sessão encerrada; redireciona para a página de login")
-    @GetMethod(value = "/logout", mimeType = "text/html")
-    public Object logout(NanoHTTPD.IHTTPSession httpSession) {
-        String sessionId = AuthInterceptor.extrairSessionId(httpSession);
-        if (sessionId != null) {
-            getSessionService().encerrarSessao(sessionId);
-        }
-        NanoHTTPD.Response response = NanoHTTPD.newFixedLengthResponse(
-                NanoHTTPD.Response.Status.REDIRECT,
-                "text/html",
-                "<!DOCTYPE html><html><head><meta charset=\"UTF-8\">" +
-                "<meta http-equiv=\"refresh\" content=\"0;url=/login\">" +
-                "<script>window.location.href='/login';</script>" +
-                "</head><body><p>Sessão encerrada. Redirecionando...</p></body></html>"
-        );
-        response.addHeader("Location", "/login");
-        response.addHeader("Set-Cookie", SessionService.COOKIE_NAME + "=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0");
-        return response;
     }
 }

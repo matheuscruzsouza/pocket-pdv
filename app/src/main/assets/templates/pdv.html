@@ -24,7 +24,9 @@
       <div style="display: flex; gap: 0.75rem; align-items: center;">
         <button class="btn btn-secondary" hx-get="/pdv/estoque" hx-target="#modal-container" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;">📦 Gestão de Estoque</button>
         <button class="btn btn-secondary" hx-get="/pdv/relatorio" hx-target="#modal-container" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;">📊 Vendas de Hoje</button>
-        <a href="/login/logout" style="color: #6b7280; font-size: 0.875rem; text-decoration: none;">Encerrar Sessão</a>
+        <form method="post" action="/logout" style="margin: 0;">
+          <button type="submit" style="background: none; border: none; padding: 0; cursor: pointer; color: #6b7280; font-size: 0.875rem;">Encerrar Sessão</button>
+        </form>
       </div>
     </header>
 
