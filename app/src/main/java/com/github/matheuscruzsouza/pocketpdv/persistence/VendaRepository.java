@@ -124,7 +124,7 @@ public class VendaRepository {
                 do {
                     long id = cursor.getLong(cursor.getColumnIndexOrThrow("id"));
                     String dataHora = cursor.getString(cursor.getColumnIndexOrThrow("data_hora"));
-                    int totalCentavos = cursor.getInt(cursor.getColumnIndexOrThrow("total_centavos"));
+                    long totalCentavos = cursor.getLong(cursor.getColumnIndexOrThrow("total_centavos"));
                     String status = cursor.getString(cursor.getColumnIndexOrThrow("status"));
                     long funcId = cursor.getLong(cursor.getColumnIndexOrThrow("funcionario_id"));
                     String funcNome = cursor.getString(cursor.getColumnIndexOrThrow("funcionario_nome"));
@@ -162,7 +162,7 @@ public class VendaRepository {
                     String funcNome = cursor.getString(cursor.getColumnIndexOrThrow("funcionario_nome"));
                     int totalVendas = cursor.getInt(cursor.getColumnIndexOrThrow("total_vendas"));
                     int totalItens = cursor.getInt(cursor.getColumnIndexOrThrow("total_itens"));
-                    int faturamento = cursor.getInt(cursor.getColumnIndexOrThrow("faturamento_centavos"));
+                    long faturamento = cursor.getLong(cursor.getColumnIndexOrThrow("faturamento_centavos"));
 
                     lista.add(new RelatorioVendasPorFuncionarioDTO(
                             funcId, funcNome, totalVendas, totalItens, faturamento
@@ -185,7 +185,7 @@ public class VendaRepository {
         try (Cursor cursor = db.rawQuery(sql, new String[]{dayPrefix})) {
             if (cursor != null && cursor.moveToFirst()) {
                 int qtd = cursor.getInt(cursor.getColumnIndexOrThrow("qtd"));
-                int total = cursor.getInt(cursor.getColumnIndexOrThrow("total"));
+                long total = cursor.getLong(cursor.getColumnIndexOrThrow("total"));
                 return new RelatorioDiarioDTO(qtd, total);
             }
         }
@@ -195,7 +195,7 @@ public class VendaRepository {
     private Venda mapCursorToVenda(Cursor cursor) {
         long id = cursor.getLong(cursor.getColumnIndexOrThrow("id"));
         String dataHora = cursor.getString(cursor.getColumnIndexOrThrow("data_hora"));
-        int totalCentavos = cursor.getInt(cursor.getColumnIndexOrThrow("total_centavos"));
+        long totalCentavos = cursor.getLong(cursor.getColumnIndexOrThrow("total_centavos"));
         String status = cursor.getString(cursor.getColumnIndexOrThrow("status"));
 
         long funcId = 1;

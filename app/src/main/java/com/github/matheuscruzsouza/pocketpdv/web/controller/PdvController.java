@@ -441,19 +441,18 @@ public class PdvController {
                 valorRecebidoStr = session.getParms().get("valorRecebido");
             }
 
-            int totalCentavos = c.getTotalCentavos();
-            int valorRecebidoCentavos = 0;
-            int trocoCentavos = 0;
+            long totalCentavos = c.getTotalCentavos();
+            long valorRecebidoCentavos = 0L;
+            long trocoCentavos = 0L;
 
             if ("DINHEIRO".equals(formaPagamento)) {
                 if (valorRecebidoStr == null || valorRecebidoStr.trim().isEmpty()) {
                     return HtmlTemplates.fragmentoCheckoutErro("Informe o valor recebido em dinheiro.");
                 }
                 try {
-                    double valorRec = Double.parseDouble(valorRecebidoStr.trim().replace(",", "."));
-                    valorRecebidoCentavos = (int) Math.round(valorRec * 100);
-                } catch (NumberFormatException e) {
-                    return HtmlTemplates.fragmentoCheckoutErro("Valor recebido inválido: " + valorRecebidoStr);
+                    valorRecebidoCentavos = com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.parseToCentavos(valorRecebidoStr);
+                } catch (IllegalArgumentException e) {
+                    return HtmlTemplates.fragmentoCheckoutErro("Valor recebido inválido: " + com.github.matheuscruzsouza.pocketpdv.util.HtmlEscaper.escape(valorRecebidoStr));
                 }
 
                 if (valorRecebidoCentavos < totalCentavos) {
@@ -464,7 +463,7 @@ public class PdvController {
             } else {
                 // Para PIX, DEBITO, CREDITO o valor recebido é o total exato
                 valorRecebidoCentavos = totalCentavos;
-                trocoCentavos = 0;
+                trocoCentavos = 0L;
             }
 
             long funcionarioId = sessaoAtiva.getUserId();
@@ -578,7 +577,7 @@ public class PdvController {
         String msg = null;
         try {
             if (nome != null && codigoBarras != null && precoStr != null && getEstoqueService() != null) {
-                int precoCentavos = Math.round(Float.parseFloat(precoStr.replace(",", ".")) * 100);
+                long precoCentavos = com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.parseToCentavos(precoStr);
                 int estoque = (estoqueStr != null && !estoqueStr.isEmpty()) ? Integer.parseInt(estoqueStr) : 0;
                 Produto p = new Produto(0, codigoBarras.trim(), nome.trim(), precoCentavos, estoque);
                 long id = getEstoqueService().salvarProduto(p);

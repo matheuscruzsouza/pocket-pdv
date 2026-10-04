@@ -14,7 +14,7 @@ public class Produto {
     private String nome;
 
     @Min(value = 0, message = "O preço não pode ser negativo")
-    private int precoCentavos;
+    private long precoCentavos;
 
     @Min(value = 0, message = "O estoque não pode ser negativo")
     private int estoque;
@@ -22,7 +22,7 @@ public class Produto {
     public Produto() {
     }
 
-    public Produto(long id, String codigoBarras, String nome, int precoCentavos, int estoque) {
+    public Produto(long id, String codigoBarras, String nome, long precoCentavos, int estoque) {
         this.id = id;
         this.codigoBarras = codigoBarras;
         this.nome = nome;
@@ -39,13 +39,13 @@ public class Produto {
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
 
-    public int getPrecoCentavos() { return precoCentavos; }
-    public void setPrecoCentavos(int precoCentavos) { this.precoCentavos = precoCentavos; }
+    public long getPrecoCentavos() { return precoCentavos; }
+    public void setPrecoCentavos(long precoCentavos) { this.precoCentavos = precoCentavos; }
 
     public int getEstoque() { return estoque; }
     public void setEstoque(int estoque) { this.estoque = estoque; }
 
     public String getPrecoFormatado() {
-        return String.format("R$ %.2f", precoCentavos / 100.0);
+        return com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(precoCentavos);
     }
 }

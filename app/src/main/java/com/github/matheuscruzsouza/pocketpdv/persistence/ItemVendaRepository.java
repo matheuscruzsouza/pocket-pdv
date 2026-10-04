@@ -69,7 +69,7 @@ public class ItemVendaRepository {
                     long id = cursor.getLong(cursor.getColumnIndexOrThrow("id"));
                     long produtoId = cursor.getLong(cursor.getColumnIndexOrThrow("produto_id"));
                     int quantidade = cursor.getInt(cursor.getColumnIndexOrThrow("quantidade"));
-                    int precoUnit = cursor.getInt(cursor.getColumnIndexOrThrow("preco_unit_centavos"));
+                    long precoUnit = cursor.getLong(cursor.getColumnIndexOrThrow("preco_unit_centavos"));
                     itens.add(new ItemVenda(id, vendaId, produtoId, quantidade, precoUnit));
                 } while (cursor.moveToNext());
             }

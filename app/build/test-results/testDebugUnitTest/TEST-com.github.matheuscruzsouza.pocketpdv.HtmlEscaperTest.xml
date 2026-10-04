@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.github.matheuscruzsouza.pocketpdv.HtmlEscaperTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-04T02:05:43" hostname="Matheus-PC" time="0.006">
+<testsuite name="com.github.matheuscruzsouza.pocketpdv.HtmlEscaperTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-04T02:17:35" hostname="Matheus-PC" time="0.011">
   <properties/>
   <testcase name="testEscapeCaracteresMisturados" classname="com.github.matheuscruzsouza.pocketpdv.HtmlEscaperTest" time="0.001"/>
-  <testcase name="testEscapeNullRetornaVazio" classname="com.github.matheuscruzsouza.pocketpdv.HtmlEscaperTest" time="0.002"/>
-  <testcase name="testEscapeEComercial" classname="com.github.matheuscruzsouza.pocketpdv.HtmlEscaperTest" time="0.001"/>
-  <testcase name="testEscapeVazioRetornaVazio" classname="com.github.matheuscruzsouza.pocketpdv.HtmlEscaperTest" time="0.0"/>
-  <testcase name="testEscapeAtributosMaliciosos" classname="com.github.matheuscruzsouza.pocketpdv.HtmlEscaperTest" time="0.001"/>
-  <testcase name="testEscapeTagScript" classname="com.github.matheuscruzsouza.pocketpdv.HtmlEscaperTest" time="0.0"/>
-  <testcase name="testEscapeTextoSeguroPermaneceInalterado" classname="com.github.matheuscruzsouza.pocketpdv.HtmlEscaperTest" time="0.001"/>
+  <testcase name="testEscapeNullRetornaVazio" classname="com.github.matheuscruzsouza.pocketpdv.HtmlEscaperTest" time="0.001"/>
+  <testcase name="testEscapeEComercial" classname="com.github.matheuscruzsouza.pocketpdv.HtmlEscaperTest" time="0.0"/>
+  <testcase name="testEscapeVazioRetornaVazio" classname="com.github.matheuscruzsouza.pocketpdv.HtmlEscaperTest" time="0.005"/>
+  <testcase name="testEscapeAtributosMaliciosos" classname="com.github.matheuscruzsouza.pocketpdv.HtmlEscaperTest" time="0.0"/>
+  <testcase name="testEscapeTagScript" classname="com.github.matheuscruzsouza.pocketpdv.HtmlEscaperTest" time="0.001"/>
+  <testcase name="testEscapeTextoSeguroPermaneceInalterado" classname="com.github.matheuscruzsouza.pocketpdv.HtmlEscaperTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

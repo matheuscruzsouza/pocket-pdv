@@ -25,19 +25,19 @@ public class ItemCarrinho {
         this.quantidade = quantidade;
     }
 
-    public int getPrecoUnitCentavos() {
+    public long getPrecoUnitCentavos() {
         return produto.getPrecoCentavos();
     }
 
-    public int getSubtotalCentavos() {
+    public long getSubtotalCentavos() {
         return produto.getPrecoCentavos() * quantidade;
     }
 
     public String getSubtotalFormatado() {
-        return String.format("R$ %.2f", getSubtotalCentavos() / 100.0);
+        return com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(getSubtotalCentavos());
     }
 
     public String getPrecoUnitarioFormatado() {
-        return String.format("R$ %.2f", produto.getPrecoCentavos() / 100.0);
+        return com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(produto.getPrecoCentavos());
     }
 }

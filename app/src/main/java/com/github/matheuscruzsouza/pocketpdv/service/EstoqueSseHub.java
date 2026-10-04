@@ -14,7 +14,7 @@ public class EstoqueSseHub {
     private static EstoqueSseHub instance;
 
     public interface VendaConcluidaListener {
-        void onVendaConcluida(long vendaId, int totalCentavos, String operador, int totalItens);
+        void onVendaConcluida(long vendaId, long totalCentavos, String operador, int totalItens);
     }
 
     public interface EstoqueAtualizadoListener {
@@ -109,7 +109,7 @@ public class EstoqueSseHub {
         broadcast("carrinho-atualizado", sb.toString());
     }
 
-    public void notificarVendaConcluida(long vendaId, int totalCentavos, String operador, int totalItens) {
+    public void notificarVendaConcluida(long vendaId, long totalCentavos, String operador, int totalItens) {
         // Notifica observadores na interface nativa Android
         for (VendaConcluidaListener l : vendaListeners) {
             try {
@@ -124,7 +124,7 @@ public class EstoqueSseHub {
                 ",\"totalCentavos\":" + totalCentavos +
                 ",\"operador\":\"" + (operador != null ? operador : "caixa") + "\"" +
                 ",\"totalItens\":" + totalItens +
-                ",\"totalFormatado\":\"" + String.format("R$ %.2f", totalCentavos / 100.0).replace(".", ",") + "\"}";
+                ",\"totalFormatado\":\"" + com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(totalCentavos).replace(".", ",") + "\"}";
 
         broadcast("venda-concluida", json);
     }

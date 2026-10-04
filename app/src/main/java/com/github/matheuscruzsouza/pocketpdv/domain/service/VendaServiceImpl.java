@@ -144,11 +144,11 @@ public class VendaServiceImpl implements VendaService {
     }
 
     @Override
-    public Venda finalizarVenda(Carrinho carrinho, long funcionarioId, String formaPagamento, int valorRecebidoCentavos, int trocoCentavos) {
-        int totalCentavos = (carrinho != null) ? carrinho.getTotalCentavos() : 0;
-        int valorPagamento = totalCentavos;
-        int valRec = valorRecebidoCentavos > 0 ? valorRecebidoCentavos : valorPagamento;
-        int troco = Math.max(0, trocoCentavos);
+    public Venda finalizarVenda(Carrinho carrinho, long funcionarioId, String formaPagamento, long valorRecebidoCentavos, long trocoCentavos) {
+        long totalCentavos = (carrinho != null) ? carrinho.getTotalCentavos() : 0L;
+        long valorPagamento = totalCentavos;
+        long valRec = valorRecebidoCentavos > 0 ? valorRecebidoCentavos : valorPagamento;
+        long troco = Math.max(0L, trocoCentavos);
         String tipo = (formaPagamento != null && !formaPagamento.trim().isEmpty()) ? formaPagamento : "DINHEIRO";
 
         List<com.github.matheuscruzsouza.pocketpdv.domain.model.Pagamento> pagamentos = new ArrayList<>();
@@ -196,7 +196,7 @@ public class VendaServiceImpl implements VendaService {
             SQLiteDatabase db = getDbHelper().getWritableDatabase();
             db.beginTransaction();
             try {
-                int totalCentavos = 0;
+                long totalCentavos = 0;
                 List<ItemVenda> itensVenda = new ArrayList<>();
 
                 for (ItemVendaComando cmd : itens) {
@@ -213,8 +213,8 @@ public class VendaServiceImpl implements VendaService {
                         throw new IllegalStateException("Estoque insuficiente para o produto: " + prod.getNome());
                     }
 
-                    int precoUnitario = prod.getPrecoCentavos();
-                    int subtotal = precoUnitario * cmd.getQuantidade();
+                    long precoUnitario = prod.getPrecoCentavos();
+                    long subtotal = precoUnitario * cmd.getQuantidade();
                     totalCentavos += subtotal;
 
                     itensVenda.add(new ItemVenda(

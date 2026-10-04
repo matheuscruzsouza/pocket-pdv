@@ -4,30 +4,30 @@ public class RelatorioDiarioDTO {
 
     private final String data;
     private final int quantidadeVendas;
-    private final int totalCentavos;
-    private final int ticketMedioCentavos;
+    private final long totalCentavos;
+    private final long ticketMedioCentavos;
 
-    public RelatorioDiarioDTO(int quantidadeVendas, int totalCentavos) {
+    public RelatorioDiarioDTO(int quantidadeVendas, long totalCentavos) {
         this("", quantidadeVendas, totalCentavos);
     }
 
-    public RelatorioDiarioDTO(String data, int quantidadeVendas, int totalCentavos) {
+    public RelatorioDiarioDTO(String data, int quantidadeVendas, long totalCentavos) {
         this.data = data;
         this.quantidadeVendas = quantidadeVendas;
         this.totalCentavos = totalCentavos;
-        this.ticketMedioCentavos = quantidadeVendas > 0 ? (totalCentavos / quantidadeVendas) : 0;
+        this.ticketMedioCentavos = quantidadeVendas > 0 ? (totalCentavos / quantidadeVendas) : 0L;
     }
 
     public String getData() { return data; }
     public int getQuantidadeVendas() { return quantidadeVendas; }
-    public int getTotalCentavos() { return totalCentavos; }
-    public int getTicketMedioCentavos() { return ticketMedioCentavos; }
+    public long getTotalCentavos() { return totalCentavos; }
+    public long getTicketMedioCentavos() { return ticketMedioCentavos; }
 
     public String getTotalFormatado() {
-        return String.format("R$ %.2f", totalCentavos / 100.0);
+        return com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(totalCentavos);
     }
 
     public String getTicketMedioFormatado() {
-        return String.format("R$ %.2f", ticketMedioCentavos / 100.0);
+        return com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(ticketMedioCentavos);
     }
 }

@@ -14,7 +14,7 @@ public interface VendaService {
     Venda finalizarVenda(Carrinho carrinho);
     Venda finalizarVenda(Carrinho carrinho, long funcionarioId);
     Venda finalizarVenda(Carrinho carrinho, long funcionarioId, List<Pagamento> pagamentos);
-    Venda finalizarVenda(Carrinho carrinho, long funcionarioId, String formaPagamento, int valorRecebidoCentavos, int trocoCentavos);
+    Venda finalizarVenda(Carrinho carrinho, long funcionarioId, String formaPagamento, long valorRecebidoCentavos, long trocoCentavos);
     Venda buscarVenda(long id);
     List<Venda> listarVendasRecentes(int limit);
     boolean estornarVenda(long vendaId);

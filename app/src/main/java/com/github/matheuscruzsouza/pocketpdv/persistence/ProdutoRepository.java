@@ -162,7 +162,7 @@ public class ProdutoRepository {
         long id = cursor.getLong(cursor.getColumnIndexOrThrow("id"));
         String codigo = cursor.getString(cursor.getColumnIndexOrThrow("codigo_barras"));
         String nome = cursor.getString(cursor.getColumnIndexOrThrow("nome"));
-        int preco = cursor.getInt(cursor.getColumnIndexOrThrow("preco_centavos"));
+        long preco = cursor.getLong(cursor.getColumnIndexOrThrow("preco_centavos"));
         int estoque = cursor.getInt(cursor.getColumnIndexOrThrow("estoque"));
         return new Produto(id, codigo, nome, preco, estoque);
     }

@@ -9,17 +9,17 @@ public class RelatorioVendaItemDTO {
     private final long funcionarioId;
     private final String funcionarioNome;
     private final int quantidadeItens;
-    private final int totalCentavos;
+    private final long totalCentavos;
     private final String status;
     private final String formaPagamento;
 
     public RelatorioVendaItemDTO(long id, String dataHora, long funcionarioId, String funcionarioNome,
-                                int quantidadeItens, int totalCentavos, String status) {
+                                int quantidadeItens, long totalCentavos, String status) {
         this(id, dataHora, funcionarioId, funcionarioNome, quantidadeItens, totalCentavos, status, "NÃO INFORMADO");
     }
 
     public RelatorioVendaItemDTO(long id, String dataHora, long funcionarioId, String funcionarioNome,
-                                int quantidadeItens, int totalCentavos, String status, String formaPagamento) {
+                                int quantidadeItens, long totalCentavos, String status, String formaPagamento) {
         this.id = id;
         this.dataHora = dataHora;
         this.funcionarioId = funcionarioId;
@@ -35,12 +35,12 @@ public class RelatorioVendaItemDTO {
     public long getFuncionarioId() { return funcionarioId; }
     public String getFuncionarioNome() { return funcionarioNome; }
     public int getQuantidadeItens() { return quantidadeItens; }
-    public int getTotalCentavos() { return totalCentavos; }
+    public long getTotalCentavos() { return totalCentavos; }
     public String getStatus() { return status; }
     public String getFormaPagamento() { return formaPagamento; }
 
     public String getTotalFormatado() {
-        return String.format(Locale.GERMANY, "R$ %.2f", totalCentavos / 100.0);
+        return com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(totalCentavos);
     }
 
     public String getDataHoraLegivel() {

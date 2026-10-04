@@ -6,12 +6,12 @@ public class ItemVenda {
     private long vendaId;
     private long produtoId;
     private int quantidade;
-    private int precoUnitCentavos;
+    private long precoUnitCentavos;
 
     public ItemVenda() {
     }
 
-    public ItemVenda(long id, long vendaId, long produtoId, int quantidade, int precoUnitCentavos) {
+    public ItemVenda(long id, long vendaId, long produtoId, int quantidade, long precoUnitCentavos) {
         this.id = id;
         this.vendaId = vendaId;
         this.produtoId = produtoId;
@@ -31,10 +31,10 @@ public class ItemVenda {
     public int getQuantidade() { return quantidade; }
     public void setQuantidade(int quantidade) { this.quantidade = quantidade; }
 
-    public int getPrecoUnitCentavos() { return precoUnitCentavos; }
-    public void setPrecoUnitCentavos(int precoUnitCentavos) { this.precoUnitCentavos = precoUnitCentavos; }
+    public long getPrecoUnitCentavos() { return precoUnitCentavos; }
+    public void setPrecoUnitCentavos(long precoUnitCentavos) { this.precoUnitCentavos = precoUnitCentavos; }
 
-    public int getSubtotalCentavos() {
-        return quantidade * precoUnitCentavos;
+    public long getSubtotalCentavos() {
+        return (long) quantidade * precoUnitCentavos;
     }
 }

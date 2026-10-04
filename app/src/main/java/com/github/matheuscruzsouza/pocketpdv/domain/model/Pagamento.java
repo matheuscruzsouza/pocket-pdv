@@ -7,14 +7,14 @@ public class Pagamento {
     private long id;
     private long vendaId;
     private String tipo;
-    private int valorCentavos;
-    private int valorRecebidoCentavos;
-    private int trocoCentavos;
+    private long valorCentavos;
+    private long valorRecebidoCentavos;
+    private long trocoCentavos;
 
     public Pagamento() {
     }
 
-    public Pagamento(long id, long vendaId, String tipo, int valorCentavos, int valorRecebidoCentavos, int trocoCentavos) {
+    public Pagamento(long id, long vendaId, String tipo, long valorCentavos, long valorRecebidoCentavos, long trocoCentavos) {
         if (tipo == null || tipo.trim().isEmpty()) {
             throw new IllegalArgumentException("O tipo de pagamento não pode ser vazio.");
         }
@@ -36,7 +36,7 @@ public class Pagamento {
         this.trocoCentavos = trocoCentavos;
     }
 
-    public Pagamento(String tipo, int valorCentavos, int valorRecebidoCentavos, int trocoCentavos) {
+    public Pagamento(String tipo, long valorCentavos, long valorRecebidoCentavos, long trocoCentavos) {
         this(0, 0, tipo, valorCentavos, valorRecebidoCentavos, trocoCentavos);
     }
 
@@ -67,33 +67,33 @@ public class Pagamento {
         this.tipo = tipo.trim().toUpperCase();
     }
 
-    public int getValorCentavos() {
+    public long getValorCentavos() {
         return valorCentavos;
     }
 
-    public void setValorCentavos(int valorCentavos) {
+    public void setValorCentavos(long valorCentavos) {
         if (valorCentavos < 0) {
             throw new IllegalArgumentException("O valor do pagamento não pode ser negativo.");
         }
         this.valorCentavos = valorCentavos;
     }
 
-    public int getValorRecebidoCentavos() {
+    public long getValorRecebidoCentavos() {
         return valorRecebidoCentavos;
     }
 
-    public void setValorRecebidoCentavos(int valorRecebidoCentavos) {
+    public void setValorRecebidoCentavos(long valorRecebidoCentavos) {
         if (valorRecebidoCentavos < 0) {
             throw new IllegalArgumentException("O valor recebido não pode ser negativo.");
         }
         this.valorRecebidoCentavos = valorRecebidoCentavos;
     }
 
-    public int getTrocoCentavos() {
+    public long getTrocoCentavos() {
         return trocoCentavos;
     }
 
-    public void setTrocoCentavos(int trocoCentavos) {
+    public void setTrocoCentavos(long trocoCentavos) {
         if (trocoCentavos < 0) {
             throw new IllegalArgumentException("O troco não pode ser negativo.");
         }
@@ -101,14 +101,14 @@ public class Pagamento {
     }
 
     public String getValorFormatado() {
-        return String.format(Locale.GERMANY, "R$ %.2f", valorCentavos / 100.0);
+        return com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(valorCentavos);
     }
 
     public String getValorRecebidoFormatado() {
-        return String.format(Locale.GERMANY, "R$ %.2f", valorRecebidoCentavos / 100.0);
+        return com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(valorRecebidoCentavos);
     }
 
     public String getTrocoFormatado() {
-        return String.format(Locale.GERMANY, "R$ %.2f", trocoCentavos / 100.0);
+        return com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(trocoCentavos);
     }
 }

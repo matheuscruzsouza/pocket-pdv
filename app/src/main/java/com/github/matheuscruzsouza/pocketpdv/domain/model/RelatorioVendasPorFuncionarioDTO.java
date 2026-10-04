@@ -8,11 +8,11 @@ public class RelatorioVendasPorFuncionarioDTO {
     private final String funcionarioNome;
     private final int totalVendas;
     private final int totalItensVendidos;
-    private final int faturamentoCentavos;
+    private final long faturamentoCentavos;
 
     public RelatorioVendasPorFuncionarioDTO(long funcionarioId, String funcionarioNome,
                                           int totalVendas, int totalItensVendidos,
-                                          int faturamentoCentavos) {
+                                          long faturamentoCentavos) {
         this.funcionarioId = funcionarioId;
         this.funcionarioNome = funcionarioNome != null ? funcionarioNome : "Não informado";
         this.totalVendas = totalVendas;
@@ -24,9 +24,9 @@ public class RelatorioVendasPorFuncionarioDTO {
     public String getFuncionarioNome() { return funcionarioNome; }
     public int getTotalVendas() { return totalVendas; }
     public int getTotalItensVendidos() { return totalItensVendidos; }
-    public int getFaturamentoCentavos() { return faturamentoCentavos; }
+    public long getFaturamentoCentavos() { return faturamentoCentavos; }
 
     public String getFaturamentoFormatado() {
-        return String.format(Locale.GERMANY, "R$ %.2f", faturamentoCentavos / 100.0);
+        return com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(faturamentoCentavos);
     }
 }

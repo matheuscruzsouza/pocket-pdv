@@ -11,13 +11,13 @@ public class ItemVendaComando {
     private final int quantidade;
 
     @Min(value = 0, message = "O preço não pode ser negativo")
-    private final int precoUnitCentavos;
+    private final long precoUnitCentavos;
 
     public ItemVendaComando(long produtoId, int quantidade) {
-        this(produtoId, quantidade, 0);
+        this(produtoId, quantidade, 0L);
     }
 
-    public ItemVendaComando(long produtoId, int quantidade, int precoUnitCentavos) {
+    public ItemVendaComando(long produtoId, int quantidade, long precoUnitCentavos) {
         this.produtoId = produtoId;
         this.quantidade = quantidade;
         this.precoUnitCentavos = precoUnitCentavos;
@@ -31,7 +31,7 @@ public class ItemVendaComando {
         return quantidade;
     }
 
-    public int getPrecoUnitCentavos() {
+    public long getPrecoUnitCentavos() {
         return precoUnitCentavos;
     }
 }

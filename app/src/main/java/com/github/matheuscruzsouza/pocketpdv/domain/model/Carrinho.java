@@ -75,8 +75,8 @@ public class Carrinho {
         return Collections.unmodifiableList(new ArrayList<>(itens));
     }
 
-    public synchronized int getTotalCentavos() {
-        int total = 0;
+    public synchronized long getTotalCentavos() {
+        long total = 0;
         for (ItemCarrinho item : itens) {
             total += item.getSubtotalCentavos();
         }
@@ -84,7 +84,7 @@ public class Carrinho {
     }
 
     public synchronized String getTotalFormatado() {
-        return String.format("R$ %.2f", getTotalCentavos() / 100.0);
+        return com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(getTotalCentavos());
     }
 
     public synchronized boolean isVazio() {

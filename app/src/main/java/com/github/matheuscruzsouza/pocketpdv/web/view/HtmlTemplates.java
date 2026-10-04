@@ -26,8 +26,8 @@ import java.util.Map;
  */
 public class HtmlTemplates {
 
-    public static String formatarDinheiro(int centavos) {
-        return String.format(Locale.GERMANY, "R$ %.2f", centavos / 100.0);
+    public static String formatarDinheiro(long centavos) {
+        return com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(centavos);
     }
 
     /**
@@ -105,7 +105,7 @@ public class HtmlTemplates {
         // Itens do carrinho e total
         List<Map<String, Object>> itensModel = extrairItensCarrinho(carrinho);
         mav.addObject("itensCarrinho", itensModel);
-        int totalCentavos = (carrinho != null) ? carrinho.getTotalCentavos() : 0;
+        long totalCentavos = (carrinho != null) ? carrinho.getTotalCentavos() : 0L;
         mav.addObject("totalFormatado", formatarDinheiro(totalCentavos));
         mav.addObject("carrinhoVazio", carrinho == null || carrinho.getItens().isEmpty());
 
@@ -144,7 +144,7 @@ public class HtmlTemplates {
     }
 
     public static String fragmentoCarrinhoAtualizado(Carrinho carrinho) {
-        int totalCentavos = (carrinho != null) ? carrinho.getTotalCentavos() : 0;
+        long totalCentavos = (carrinho != null) ? carrinho.getTotalCentavos() : 0L;
         boolean vazio = (carrinho == null || carrinho.getItens().isEmpty());
 
         return fragmentoItensCarrinho(carrinho) +
@@ -158,9 +158,9 @@ public class HtmlTemplates {
 
     public static String fragmentoModalRelatorio(RelatorioDiarioDTO resumo, List<Venda> vendasRecentes) {
         Map<String, Object> model = new HashMap<>();
-        int totalCentavos = (resumo != null) ? resumo.getTotalCentavos() : 0;
+        long totalCentavos = (resumo != null) ? resumo.getTotalCentavos() : 0L;
         int qtdVendas = (resumo != null) ? resumo.getQuantidadeVendas() : 0;
-        int ticketMedioCentavos = (resumo != null) ? resumo.getTicketMedioCentavos() : 0;
+        long ticketMedioCentavos = (resumo != null) ? resumo.getTicketMedioCentavos() : 0L;
 
         model.put("totalFaturamento", formatarDinheiro(totalCentavos));
         model.put("qtdVendas", qtdVendas);
@@ -204,14 +204,14 @@ public class HtmlTemplates {
     }
 
     public static String fragmentoCheckoutSucesso(Venda venda, String formaPagamento) {
-        return fragmentoCheckoutSucesso(venda, formaPagamento, venda != null ? venda.getTotalCentavos() : 0, 0);
+        return fragmentoCheckoutSucesso(venda, formaPagamento, venda != null ? venda.getTotalCentavos() : 0L, 0L);
     }
 
-    public static String fragmentoCheckoutSucesso(Venda venda, String formaPagamento, int valorRecebidoCentavos, int trocoCentavos) {
+    public static String fragmentoCheckoutSucesso(Venda venda, String formaPagamento, long valorRecebidoCentavos, long trocoCentavos) {
         String formaEscapada = com.github.matheuscruzsouza.pocketpdv.util.HtmlEscaper.escape(formaPagamento);
         String dataHoraEscapada = com.github.matheuscruzsouza.pocketpdv.util.HtmlEscaper.escape(venda != null ? venda.getDataHora() : "");
         long vendaId = venda != null ? venda.getId() : 0;
-        int totalCentavos = venda != null ? venda.getTotalCentavos() : 0;
+        long totalCentavos = venda != null ? venda.getTotalCentavos() : 0L;
 
         StringBuilder detalhePagamento = new StringBuilder();
         detalhePagamento.append("Total: <b>").append(formatarDinheiro(totalCentavos)).append("</b>")

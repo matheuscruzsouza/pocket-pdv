@@ -76,9 +76,9 @@ public class PagamentoRepository {
                 do {
                     long id = cursor.getLong(cursor.getColumnIndexOrThrow("id"));
                     String tipo = cursor.getString(cursor.getColumnIndexOrThrow("tipo"));
-                    int valorCentavos = cursor.getInt(cursor.getColumnIndexOrThrow("valor_centavos"));
-                    int valorRecebidoCentavos = cursor.getInt(cursor.getColumnIndexOrThrow("valor_recebido_centavos"));
-                    int trocoCentavos = cursor.getInt(cursor.getColumnIndexOrThrow("troco_centavos"));
+                    long valorCentavos = cursor.getLong(cursor.getColumnIndexOrThrow("valor_centavos"));
+                    long valorRecebidoCentavos = cursor.getLong(cursor.getColumnIndexOrThrow("valor_recebido_centavos"));
+                    long trocoCentavos = cursor.getLong(cursor.getColumnIndexOrThrow("troco_centavos"));
 
                     pagamentos.add(new Pagamento(id, vendaId, tipo, valorCentavos, valorRecebidoCentavos, trocoCentavos));
                 } while (cursor.moveToNext());
