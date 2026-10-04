@@ -104,6 +104,9 @@ public class ProdutoRepository {
     }
 
     public boolean decrementarEstoque(long produtoId, int quantidade, SQLiteDatabase dbExterno) {
+        if (quantidade <= 0) {
+            throw new IllegalArgumentException("A quantidade para decremento de estoque deve ser maior que zero: " + quantidade);
+        }
         SQLiteDatabase db = (dbExterno != null) ? dbExterno : getWritableDb();
         // Update condicional atômico: estoque >= quantidade
         String sql = "UPDATE produtos SET estoque = estoque - ? WHERE id = ? AND estoque >= ?";
@@ -116,6 +119,9 @@ public class ProdutoRepository {
     }
 
     public boolean incrementarEstoque(long produtoId, int quantidade, SQLiteDatabase dbExterno) {
+        if (quantidade <= 0) {
+            throw new IllegalArgumentException("A quantidade para incremento de estoque deve ser maior que zero: " + quantidade);
+        }
         SQLiteDatabase db = (dbExterno != null) ? dbExterno : getWritableDb();
         String sql = "UPDATE produtos SET estoque = estoque + ? WHERE id = ?";
         android.database.sqlite.SQLiteStatement stmt = db.compileStatement(sql);

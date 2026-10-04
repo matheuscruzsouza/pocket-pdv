@@ -7,6 +7,9 @@ public class ItemCarrinho {
     private int quantidade;
 
     public ItemCarrinho(long id, Produto produto, int quantidade) {
+        if (quantidade <= 0) {
+            throw new IllegalArgumentException("Quantidade deve ser maior que zero: " + quantidade);
+        }
         this.id = id;
         this.produto = produto;
         this.quantidade = quantidade;
@@ -15,7 +18,12 @@ public class ItemCarrinho {
     public long getId() { return id; }
     public Produto getProduto() { return produto; }
     public int getQuantidade() { return quantidade; }
-    public void setQuantidade(int quantidade) { this.quantidade = quantidade; }
+    public void setQuantidade(int quantidade) {
+        if (quantidade <= 0) {
+            throw new IllegalArgumentException("Quantidade deve ser maior que zero: " + quantidade);
+        }
+        this.quantidade = quantidade;
+    }
 
     public int getPrecoUnitCentavos() {
         return produto.getPrecoCentavos();

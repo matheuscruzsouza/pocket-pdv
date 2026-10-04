@@ -76,4 +76,26 @@ public class CarrinhoTest {
         assertTrue(carrinho.getItens().isEmpty());
         assertEquals(0, carrinho.getTotalCentavos());
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testAdicionarQuantidadeZeroLancaExcecao() {
+        carrinho.adicionar(cafe, 0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testAdicionarQuantidadeNegativaLancaExcecao() {
+        carrinho.adicionar(cafe, -5);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDiminuirQuantidadeZeroLancaExcecao() {
+        carrinho.adicionar(cafe, 2);
+        carrinho.diminuir(cafe.getId(), 0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDiminuirQuantidadeNegativaLancaExcecao() {
+        carrinho.adicionar(cafe, 2);
+        carrinho.diminuir(cafe.getId(), -3);
+    }
 }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.github.matheuscruzsouza.pocketpdv.AuthInterceptorTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-03T21:07:40" hostname="Matheus-PC" time="0.013">
+<testsuite name="com.github.matheuscruzsouza.pocketpdv.AuthInterceptorTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-04T01:34:14" hostname="Matheus-PC" time="0.022">
   <properties/>
-  <testcase name="testRotasPublicasPermitidasSemSessao" classname="com.github.matheuscruzsouza.pocketpdv.AuthInterceptorTest" time="0.007"/>
-  <testcase name="testMutacoesPdvBloqueadasSemSessao" classname="com.github.matheuscruzsouza.pocketpdv.AuthInterceptorTest" time="0.001"/>
+  <testcase name="testRotasPublicasPermitidasSemSessao" classname="com.github.matheuscruzsouza.pocketpdv.AuthInterceptorTest" time="0.014"/>
+  <testcase name="testMutacoesPdvBloqueadasSemSessao" classname="com.github.matheuscruzsouza.pocketpdv.AuthInterceptorTest" time="0.0"/>
   <testcase name="testExtrairSessionId" classname="com.github.matheuscruzsouza.pocketpdv.AuthInterceptorTest" time="0.0"/>
   <testcase name="testSessaoComTokenInvalidoBloqueada" classname="com.github.matheuscruzsouza.pocketpdv.AuthInterceptorTest" time="0.001"/>
-  <testcase name="testMutacoesPdvPermitidasComSessaoValida" classname="com.github.matheuscruzsouza.pocketpdv.AuthInterceptorTest" time="0.002"/>
+  <testcase name="testMutacoesPdvPermitidasComSessaoValida" classname="com.github.matheuscruzsouza.pocketpdv.AuthInterceptorTest" time="0.003"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

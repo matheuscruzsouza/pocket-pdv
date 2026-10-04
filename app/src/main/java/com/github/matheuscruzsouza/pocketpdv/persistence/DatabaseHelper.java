@@ -16,8 +16,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "  id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "  codigo_barras TEXT NOT NULL UNIQUE, " +
             "  nome TEXT NOT NULL, " +
-            "  preco_centavos INTEGER NOT NULL, " +
-            "  estoque INTEGER NOT NULL DEFAULT 0" +
+            "  preco_centavos INTEGER NOT NULL CHECK (preco_centavos >= 0), " +
+            "  estoque INTEGER NOT NULL DEFAULT 0 CHECK (estoque >= 0)" +
             ");";
 
     public static final String SQL_CREATE_IDX_PRODUTOS_CODIGO =
@@ -27,7 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE IF NOT EXISTS vendas (" +
             "  id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "  data_hora TEXT NOT NULL, " +
-            "  total_centavos INTEGER NOT NULL, " +
+            "  total_centavos INTEGER NOT NULL CHECK (total_centavos >= 0), " +
             "  status TEXT NOT NULL, " +
             "  funcionario_id INTEGER DEFAULT 1 REFERENCES funcionarios(id)" +
             ");";
@@ -43,8 +43,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "  id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "  venda_id INTEGER NOT NULL REFERENCES vendas(id), " +
             "  produto_id INTEGER NOT NULL REFERENCES produtos(id), " +
-            "  quantidade INTEGER NOT NULL, " +
-            "  preco_unit_centavos INTEGER NOT NULL" +
+            "  quantidade INTEGER NOT NULL CHECK (quantidade > 0), " +
+            "  preco_unit_centavos INTEGER NOT NULL CHECK (preco_unit_centavos >= 0)" +
             ");";
 
     public static final String SQL_CREATE_IDX_ITENS_VENDA_VENDA_ID =

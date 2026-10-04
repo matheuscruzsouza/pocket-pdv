@@ -11,6 +11,9 @@ public class Carrinho {
     private final List<ItemCarrinho> itens = new ArrayList<>();
 
     public synchronized ItemCarrinho adicionarItem(Produto produto, int quantidade) {
+        if (quantidade <= 0) {
+            throw new IllegalArgumentException("A quantidade a adicionar deve ser maior que zero: " + quantidade);
+        }
         for (ItemCarrinho item : itens) {
             if (item.getProduto().getId() == produto.getId()) {
                 item.setQuantidade(item.getQuantidade() + quantidade);
@@ -47,6 +50,9 @@ public class Carrinho {
     }
 
     public synchronized void diminuir(long id, int quantidade) {
+        if (quantidade <= 0) {
+            throw new IllegalArgumentException("A quantidade a diminuir deve ser maior que zero: " + quantidade);
+        }
         for (int i = 0; i < itens.size(); i++) {
             ItemCarrinho item = itens.get(i);
             if (item.getProduto().getId() == id || item.getId() == id) {

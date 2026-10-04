@@ -214,6 +214,11 @@ public class PdvController {
         String op = sessaoAtiva.getUsuario();
         Carrinho c = getCarrinho(sessaoAtiva);
 
+        if (quantidade <= 0) {
+            String alertaHtml = "<div id=\"alerta-area\" hx-swap-oob=\"true\" style=\"background: #fee2e2; color: #b91c1c; padding: 0.75rem; border-radius: 0.375rem; margin-bottom: 1rem;\">A quantidade deve ser maior que zero.</div>";
+            return HtmlTemplates.fragmentoCarrinhoAtualizado(c) + alertaHtml;
+        }
+
         if (produtoId > 0 && getEstoqueService() != null) {
             Produto produto = getEstoqueService().buscarPorId(produtoId);
             if (produto != null && produto.getEstoque() > 0 && c != null) {
@@ -269,6 +274,11 @@ public class PdvController {
 
         String op = sessaoAtiva.getUsuario();
         Carrinho c = getCarrinho(sessaoAtiva);
+
+        if (quantidade <= 0) {
+            String alertaHtml = "<div id=\"alerta-area\" hx-swap-oob=\"true\" style=\"background: #fee2e2; color: #b91c1c; padding: 0.75rem; border-radius: 0.375rem; margin-bottom: 1rem;\">A quantidade deve ser maior que zero.</div>";
+            return HtmlTemplates.fragmentoCarrinhoAtualizado(c) + alertaHtml;
+        }
 
         if (produtoId > 0 && c != null) {
             c.diminuir(produtoId, quantidade);
