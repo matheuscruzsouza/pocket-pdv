@@ -414,6 +414,7 @@ public class PdvController {
     public String finalizarVenda(
             @Parameter(description = "Forma de pagamento (DINHEIRO, CARTAO_CREDITO, CARTAO_DEBITO, PIX)", example = "DINHEIRO") @RequestParam("formaPagamento") String formaPagamento,
             @Parameter(description = "Identificador do operador de caixa", example = "blima") @RequestParam("operador") String operador,
+            @Parameter(description = "Valor em dinheiro entregue pelo cliente", example = "50.00") @RequestParam("valorRecebido") String valorRecebidoStr,
             NanoHTTPD.IHTTPSession session) {
         Session sessaoAtiva = obterSessao(session);
         if (sessaoAtiva == null) {
@@ -426,13 +427,50 @@ public class PdvController {
             if (getVendaService() == null || c == null) {
                 return HtmlTemplates.fragmentoCheckoutErro("Serviço de venda indisponível.");
             }
+            if (c.isVazio()) {
+                return HtmlTemplates.fragmentoCheckoutErro("O carrinho está vazio.");
+            }
+
             if (formaPagamento == null || formaPagamento.trim().isEmpty()) {
                 formaPagamento = "DINHEIRO";
+            } else {
+                formaPagamento = formaPagamento.trim().toUpperCase();
             }
+
+            if (valorRecebidoStr == null && session != null && session.getParms() != null) {
+                valorRecebidoStr = session.getParms().get("valorRecebido");
+            }
+
+            int totalCentavos = c.getTotalCentavos();
+            int valorRecebidoCentavos = 0;
+            int trocoCentavos = 0;
+
+            if ("DINHEIRO".equals(formaPagamento)) {
+                if (valorRecebidoStr == null || valorRecebidoStr.trim().isEmpty()) {
+                    return HtmlTemplates.fragmentoCheckoutErro("Informe o valor recebido em dinheiro.");
+                }
+                try {
+                    double valorRec = Double.parseDouble(valorRecebidoStr.trim().replace(",", "."));
+                    valorRecebidoCentavos = (int) Math.round(valorRec * 100);
+                } catch (NumberFormatException e) {
+                    return HtmlTemplates.fragmentoCheckoutErro("Valor recebido inválido: " + valorRecebidoStr);
+                }
+
+                if (valorRecebidoCentavos < totalCentavos) {
+                    return HtmlTemplates.fragmentoCheckoutErro("Valor recebido (" + HtmlTemplates.formatarDinheiro(valorRecebidoCentavos) +
+                            ") insuficiente para cobrir o total (" + HtmlTemplates.formatarDinheiro(totalCentavos) + ").");
+                }
+                trocoCentavos = valorRecebidoCentavos - totalCentavos;
+            } else {
+                // Para PIX, DEBITO, CREDITO o valor recebido é o total exato
+                valorRecebidoCentavos = totalCentavos;
+                trocoCentavos = 0;
+            }
+
             long funcionarioId = sessaoAtiva.getUserId();
             Venda venda = getVendaService().finalizarVenda(c, funcionarioId);
             EstoqueSseHub.getInstance().notificarCarrinho(usuario, c);
-            return HtmlTemplates.fragmentoCheckoutSucesso(venda, formaPagamento);
+            return HtmlTemplates.fragmentoCheckoutSucesso(venda, formaPagamento, valorRecebidoCentavos, trocoCentavos);
         } catch (Exception e) {
             return HtmlTemplates.fragmentoCheckoutErro(e.getMessage());
         }

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-04T01:54:45" hostname="Matheus-PC" time="0.015">
+<testsuite name="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-04T01:58:29" hostname="Matheus-PC" time="0.007">
   <properties/>
-  <testcase name="testIncrementarMesmoItem" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.001"/>
+  <testcase name="testIncrementarMesmoItem" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.002"/>
   <testcase name="testAdicionarItem" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.0"/>
-  <testcase name="testAdicionarQuantidadeNegativaLancaExcecao" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.0"/>
-  <testcase name="testRemoverItem" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.0"/>
-  <testcase name="testLimparCarrinho" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.001"/>
-  <testcase name="testDiminuirQuantidadeNegativaLancaExcecao" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.001"/>
-  <testcase name="testMultiplosItens" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.001"/>
-  <testcase name="testDiminuirQuantidadeZeroLancaExcecao" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.001"/>
-  <testcase name="testAdicionarQuantidadeZeroLancaExcecao" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.001"/>
+  <testcase name="testAdicionarQuantidadeNegativaLancaExcecao" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.001"/>
+  <testcase name="testRemoverItem" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.001"/>
+  <testcase name="testLimparCarrinho" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.0"/>
+  <testcase name="testDiminuirQuantidadeNegativaLancaExcecao" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.0"/>
+  <testcase name="testMultiplosItens" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.0"/>
+  <testcase name="testDiminuirQuantidadeZeroLancaExcecao" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.0"/>
+  <testcase name="testAdicionarQuantidadeZeroLancaExcecao" classname="com.github.matheuscruzsouza.pocketpdv.CarrinhoTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

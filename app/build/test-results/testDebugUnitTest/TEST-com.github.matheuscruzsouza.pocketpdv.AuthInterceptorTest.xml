@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.github.matheuscruzsouza.pocketpdv.AuthInterceptorTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-04T01:54:45" hostname="Matheus-PC" time="0.019">
+<testsuite name="com.github.matheuscruzsouza.pocketpdv.AuthInterceptorTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-04T01:58:29" hostname="Matheus-PC" time="0.017">
   <properties/>
-  <testcase name="testRotasPublicasPermitidasSemSessao" classname="com.github.matheuscruzsouza.pocketpdv.AuthInterceptorTest" time="0.014"/>
+  <testcase name="testRotasPublicasPermitidasSemSessao" classname="com.github.matheuscruzsouza.pocketpdv.AuthInterceptorTest" time="0.011"/>
   <testcase name="testMutacoesPdvBloqueadasSemSessao" classname="com.github.matheuscruzsouza.pocketpdv.AuthInterceptorTest" time="0.0"/>
   <testcase name="testExtrairSessionId" classname="com.github.matheuscruzsouza.pocketpdv.AuthInterceptorTest" time="0.0"/>
   <testcase name="testSessaoComTokenInvalidoBloqueada" classname="com.github.matheuscruzsouza.pocketpdv.AuthInterceptorTest" time="0.0"/>

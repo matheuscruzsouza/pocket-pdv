@@ -204,14 +204,30 @@ public class HtmlTemplates {
     }
 
     public static String fragmentoCheckoutSucesso(Venda venda, String formaPagamento) {
+        return fragmentoCheckoutSucesso(venda, formaPagamento, venda != null ? venda.getTotalCentavos() : 0, 0);
+    }
+
+    public static String fragmentoCheckoutSucesso(Venda venda, String formaPagamento, int valorRecebidoCentavos, int trocoCentavos) {
         String formaEscapada = com.github.matheuscruzsouza.pocketpdv.util.HtmlEscaper.escape(formaPagamento);
         String dataHoraEscapada = com.github.matheuscruzsouza.pocketpdv.util.HtmlEscaper.escape(venda != null ? venda.getDataHora() : "");
         long vendaId = venda != null ? venda.getId() : 0;
         int totalCentavos = venda != null ? venda.getTotalCentavos() : 0;
 
+        StringBuilder detalhePagamento = new StringBuilder();
+        detalhePagamento.append("Total: <b>").append(formatarDinheiro(totalCentavos)).append("</b>")
+                .append(" &bull; Forma: <b>").append(formaEscapada).append("</b>");
+
+        if ("DINHEIRO".equalsIgnoreCase(formaPagamento) && valorRecebidoCentavos > 0) {
+            detalhePagamento.append(" &bull; Recebido: <b>").append(formatarDinheiro(valorRecebidoCentavos)).append("</b>");
+            if (trocoCentavos > 0) {
+                detalhePagamento.append(" &bull; Troco: <b style=\"color: #047857;\">").append(formatarDinheiro(trocoCentavos)).append("</b>");
+            }
+        }
+        detalhePagamento.append(" &bull; Horário: ").append(dataHoraEscapada);
+
         return "<div style=\"background: #d1fae5; color: #065f46; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; border: 1px solid #a7f3d0;\">\n" +
                 "  <div class=\"font-bold\" style=\"font-size: 1.1rem;\">✅ Venda #" + vendaId + " finalizada com sucesso!</div>\n" +
-                "  <div style=\"margin-top: 0.25rem;\">Total: <b>" + formatarDinheiro(totalCentavos) + "</b> &bull; Forma: <b>" + formaEscapada + "</b> &bull; Horário: " + dataHoraEscapada + "</div>\n" +
+                "  <div style=\"margin-top: 0.25rem;\">" + detalhePagamento + "</div>\n" +
                 "</div>\n" +
                 "<tbody id=\"cart-table-body\" hx-swap-oob=\"true\">\n" +
                 "  <tr><td colspan=\"5\" class=\"text-center\" style=\"color: #9ca3af; padding: 2rem;\">Carrinho vazio</td></tr>\n" +

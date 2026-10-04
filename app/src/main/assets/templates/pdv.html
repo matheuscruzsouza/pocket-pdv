@@ -200,7 +200,7 @@
         '    </div>' +
         '    <div id="troco-container" class="troco-box">' +
         '      <label class="form-label" style="margin-bottom: 0.35rem;">Valor Recebido (R$)</label>' +
-        '      <input type="number" step="0.01" id="valor-recebido" class="form-input" placeholder="Ex: 50.00" oninput="calcularTroco(' + totalCentavos + ')">' +
+        '      <input type="number" step="0.01" id="valor-recebido" name="valorRecebido" class="form-input" placeholder="Ex: 50.00" oninput="calcularTroco(' + totalCentavos + ')">' +
         '      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.75rem;">' +
         '        <span style="font-weight: 700; color: #4b5563;">Troco a Devolver:</span>' +
         '        <span id="label-troco" class="troco-val">R$ 0,00</span>' +
@@ -218,7 +218,19 @@
       btn.classList.add('active');
       document.getElementById('forma-pagamento-val').value = forma;
       var trocoBox = document.getElementById('troco-container');
-      if (trocoBox) trocoBox.style.display = (forma === 'DINHEIRO') ? 'block' : 'none';
+      var inputRec = document.getElementById('valor-recebido');
+      if (forma === 'DINHEIRO') {
+        if (trocoBox) trocoBox.style.display = 'block';
+        if (inputRec) {
+          inputRec.value = '';
+          inputRec.focus();
+        }
+      } else {
+        if (trocoBox) trocoBox.style.display = 'none';
+        var totalText = document.getElementById('cart-total').innerText;
+        var totalReais = (parseFloat(totalText.replace('R$', '').replace('.', '').replace(',', '.').trim()) || 0).toFixed(2);
+        if (inputRec) inputRec.value = totalReais;
+      }
     }
     function calcularTroco(totalCentavos) {
       var recVal = parseFloat(document.getElementById('valor-recebido').value) || 0;
