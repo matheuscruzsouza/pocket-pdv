@@ -144,9 +144,8 @@ public class PdvController {
     @ApiResponse(responseCode = 200, description = "Interface do PDV renderizada")
     @ApiResponse(responseCode = 302, description = "Redireciona para /login caso não autenticado")
     @GetMethod(value = "", mimeType = "text/html")
-    public Object index(
-            @Parameter(description = "Identificador do operador de caixa", example = "blima") @RequestParam("operador") String operador,
-            NanoHTTPD.IHTTPSession session) {
+    public Object index(NanoHTTPD.IHTTPSession session) {
+        System.out.println("IHTTPSession = " + session);
         Session sessaoAtiva = obterSessao(session);
         if (sessaoAtiva == null) {
             NanoHTTPD.Response redirect = NanoHTTPD.newFixedLengthResponse(

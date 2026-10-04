@@ -107,7 +107,7 @@ public class AuthController {
             String token = session != null ? session.getId() : "";
 
             NanoHTTPD.Response response = NanoHTTPD.newFixedLengthResponse(
-                    NanoHTTPD.Response.Status.REDIRECT,
+                    NanoHTTPD.Response.Status.REDIRECT_SEE_OTHER,
                     "text/html",
                     "<!DOCTYPE html><html><head><meta charset=\"UTF-8\">" +
                     "<meta http-equiv=\"refresh\" content=\"0;url=/pdv\">" +

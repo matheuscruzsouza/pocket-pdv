@@ -34,6 +34,6 @@ android {
 dependencies {
     implementation libs.appcompat
     implementation libs.material
-    implementation 'com.github.matheuscruzsouza:nano-spring:1.10.0'
+    implementation 'com.github.matheuscruzsouza:nano-spring:1.11.1'
     testImplementation libs.junit
 }
