@@ -375,7 +375,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        String valorFmt = String.format(Locale.GERMANY, "R$ %.2f", v.getTotalCentavos() / 100.0);
+        String valorFmt = com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(v.getTotalCentavos());
 
         new AlertDialog.Builder(this)
                 .setTitle("Estornar Venda #" + v.getId())
@@ -410,9 +410,9 @@ public class MainActivity extends AppCompatActivity {
             double totalReais = relatorio.getTotalCentavos() / 100.0;
             double ticketMedioReais = relatorio.getTicketMedioCentavos() / 100.0;
 
-            tvTotalVendas.setText(String.format(Locale.GERMANY, "R$ %.2f", totalReais));
+            tvTotalVendas.setText(com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(relatorio.getTotalCentavos()));
             tvQtdVendas.setText(String.valueOf(relatorio.getQuantidadeVendas()));
-            tvTicketMedio.setText(String.format(Locale.GERMANY, "R$ %.2f", ticketMedioReais));
+            tvTicketMedio.setText(com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(relatorio.getTicketMedioCentavos()));
 
             // Vendas Recentes
             containerVendasRecentes.removeAllViews();
@@ -446,14 +446,14 @@ public class MainActivity extends AppCompatActivity {
 
                     boolean cancelada = "CANCELADA".equalsIgnoreCase(v.getStatus());
                     if (cancelada) {
-                        tvTotal.setText(String.format(Locale.GERMANY, "R$ %.2f", v.getTotalCentavos() / 100.0));
+                        tvTotal.setText(com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(v.getTotalCentavos()));
                         tvTotal.setPaintFlags(tvTotal.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                         tvTotal.setTextColor(Color.parseColor("#9CA3AF"));
                         tvStatus.setText("CANCELADA");
                         tvStatus.setBackgroundResource(R.drawable.badge_danger);
                         tvStatus.setTextColor(Color.parseColor("#991B1B"));
                     } else {
-                        tvTotal.setText(String.format(Locale.GERMANY, "R$ %.2f", v.getTotalCentavos() / 100.0));
+                        tvTotal.setText(com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(v.getTotalCentavos()));
                         tvTotal.setPaintFlags(tvTotal.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                         tvTotal.setTextColor(Color.parseColor("#059669"));
                         tvStatus.setText(v.getStatus() != null ? v.getStatus() : "CONCLUÍDA");
@@ -687,7 +687,7 @@ public class MainActivity extends AppCompatActivity {
                 totalItens += item.getQuantidadeItens();
             }
 
-            tvRelatoriosTotalFaturado.setText(String.format(Locale.GERMANY, "R$ %.2f", totalFaturamentoCentavos / 100.0));
+            tvRelatoriosTotalFaturado.setText(com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(totalFaturamentoCentavos));
             tvRelatoriosQtdVendas.setText(String.valueOf(totalVendas));
             tvRelatoriosQtdItens.setText(String.format(Locale.getDefault(), "%d un", totalItens));
 

@@ -115,6 +115,9 @@ public class PocketPdvService extends Service {
                 Log.e(TAG, "Erro ao parar servidor: " + e.getMessage(), e);
             }
         }
+        try {
+            EstoqueSseHub.getInstance().encerrar();
+        } catch (Exception ignored) {}
         if (dbHelper != null) {
             dbHelper.close();
         }

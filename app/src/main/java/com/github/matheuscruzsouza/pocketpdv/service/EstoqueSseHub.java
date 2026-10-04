@@ -7,10 +7,16 @@ import com.github.matheuscruzsouza.nanospring.sse.SseEmitter;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class EstoqueSseHub {
 
     private static final String TAG = "EstoqueSseHub";
+    public static final int MAX_EMITTERS = 32;
+    private static final long HEARTBEAT_INTERVAL_SECONDS = 15;
+
     private static EstoqueSseHub instance;
 
     public interface VendaConcluidaListener {
@@ -24,6 +30,7 @@ public class EstoqueSseHub {
     private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
     private final List<VendaConcluidaListener> vendaListeners = new CopyOnWriteArrayList<>();
     private final List<EstoqueAtualizadoListener> estoqueListeners = new CopyOnWriteArrayList<>();
+    private ScheduledExecutorService heartbeatScheduler;
 
     private EstoqueSseHub() {
     }
@@ -35,11 +42,80 @@ public class EstoqueSseHub {
         return instance;
     }
 
-    public SseEmitter registrar() {
+    public synchronized SseEmitter registrar() {
+        garantirHeartbeatAtivo();
+
+        // Evita acúmulo descontrolado de conexões caso o limite seja atingido
+        while (emitters.size() >= MAX_EMITTERS && !emitters.isEmpty()) {
+            SseEmitter antigo = emitters.remove(0);
+            try {
+                antigo.complete();
+            } catch (Exception ignored) {}
+            Log.w(TAG, "Limite de emitters atingido (" + MAX_EMITTERS + "). Conexão mais antiga descartada.");
+        }
+
         SseEmitter emitter = new SseEmitter();
         emitters.add(emitter);
-        Log.d(TAG, "Novo cliente SSE conectado. Total: " + emitters.size());
+        Log.d(TAG, "Novo cliente SSE conectado. Total ativo: " + emitters.size());
         return emitter;
+    }
+
+    public void remover(SseEmitter emitter) {
+        if (emitter == null) return;
+        boolean removed = emitters.remove(emitter);
+        if (removed) {
+            try {
+                emitter.complete();
+            } catch (Exception ignored) {}
+            Log.d(TAG, "Cliente SSE desconectado manualmente. Total ativo: " + emitters.size());
+        }
+    }
+
+    private synchronized void garantirHeartbeatAtivo() {
+        if (heartbeatScheduler == null || heartbeatScheduler.isShutdown()) {
+            heartbeatScheduler = Executors.newSingleThreadScheduledExecutor(r -> {
+                Thread t = new Thread(r, "sse-heartbeat");
+                t.setDaemon(true);
+                return t;
+            });
+            heartbeatScheduler.scheduleWithFixedDelay(this::enviarHeartbeat,
+                    HEARTBEAT_INTERVAL_SECONDS, HEARTBEAT_INTERVAL_SECONDS, TimeUnit.SECONDS);
+            Log.d(TAG, "Heartbeat periódico SSE iniciado (a cada " + HEARTBEAT_INTERVAL_SECONDS + "s).");
+        }
+    }
+
+    private void enviarHeartbeat() {
+        if (emitters.isEmpty()) return;
+
+        for (SseEmitter emitter : emitters) {
+            try {
+                // Ping SSE via comentário ": ping\n\n". Não interfere no payload de eventos e valida a conexão TCP
+                emitter.sendComment("ping");
+            } catch (IOException | RuntimeException e) {
+                // Conexão morta ou cliente desconectado
+                emitters.remove(emitter);
+                try {
+                    emitter.complete();
+                } catch (Exception ignored) {}
+                Log.d(TAG, "Conexão SSE inativa/quebrada detectada pelo heartbeat e removida. Restantes: " + emitters.size());
+            }
+        }
+    }
+
+    public synchronized void encerrar() {
+        if (heartbeatScheduler != null) {
+            heartbeatScheduler.shutdownNow();
+            heartbeatScheduler = null;
+        }
+        for (SseEmitter emitter : emitters) {
+            try {
+                emitter.complete();
+            } catch (Exception ignored) {}
+        }
+        emitters.clear();
+        vendaListeners.clear();
+        estoqueListeners.clear();
+        Log.d(TAG, "EstoqueSseHub encerrado e todos os emitters fechados.");
     }
 
     public void registrarVendaListener(VendaConcluidaListener listener) {

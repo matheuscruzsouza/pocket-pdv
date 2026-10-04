@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.github.matheuscruzsouza.pocketpdv.PagamentoTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-04T02:17:35" hostname="Matheus-PC" time="0.006">
+<testsuite name="com.github.matheuscruzsouza.pocketpdv.PagamentoTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-04T02:27:37" hostname="Matheus-PC" time="0.004">
   <properties/>
   <testcase name="testCriacaoPagamentoValido" classname="com.github.matheuscruzsouza.pocketpdv.PagamentoTest" time="0.002"/>
   <testcase name="testValorRecebidoNaoPodeSerNegativo" classname="com.github.matheuscruzsouza.pocketpdv.PagamentoTest" time="0.0"/>
-  <testcase name="testValorNaoPodeSerNegativo" classname="com.github.matheuscruzsouza.pocketpdv.PagamentoTest" time="0.001"/>
-  <testcase name="testTipoNaoPodeSerVazio" classname="com.github.matheuscruzsouza.pocketpdv.PagamentoTest" time="0.002"/>
-  <testcase name="testTrocoNaoPodeSerNegativo" classname="com.github.matheuscruzsouza.pocketpdv.PagamentoTest" time="0.001"/>
+  <testcase name="testValorNaoPodeSerNegativo" classname="com.github.matheuscruzsouza.pocketpdv.PagamentoTest" time="0.0"/>
+  <testcase name="testTipoNaoPodeSerVazio" classname="com.github.matheuscruzsouza.pocketpdv.PagamentoTest" time="0.001"/>
+  <testcase name="testTrocoNaoPodeSerNegativo" classname="com.github.matheuscruzsouza.pocketpdv.PagamentoTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
