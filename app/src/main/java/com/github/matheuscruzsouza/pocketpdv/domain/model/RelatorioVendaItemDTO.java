@@ -11,9 +11,15 @@ public class RelatorioVendaItemDTO {
     private final int quantidadeItens;
     private final int totalCentavos;
     private final String status;
+    private final String formaPagamento;
 
     public RelatorioVendaItemDTO(long id, String dataHora, long funcionarioId, String funcionarioNome,
                                 int quantidadeItens, int totalCentavos, String status) {
+        this(id, dataHora, funcionarioId, funcionarioNome, quantidadeItens, totalCentavos, status, "NÃO INFORMADO");
+    }
+
+    public RelatorioVendaItemDTO(long id, String dataHora, long funcionarioId, String funcionarioNome,
+                                int quantidadeItens, int totalCentavos, String status, String formaPagamento) {
         this.id = id;
         this.dataHora = dataHora;
         this.funcionarioId = funcionarioId;
@@ -21,6 +27,7 @@ public class RelatorioVendaItemDTO {
         this.quantidadeItens = quantidadeItens;
         this.totalCentavos = totalCentavos;
         this.status = status != null ? status : "CONCLUIDA";
+        this.formaPagamento = (formaPagamento != null && !formaPagamento.trim().isEmpty()) ? formaPagamento : "NÃO INFORMADO";
     }
 
     public long getId() { return id; }
@@ -30,6 +37,7 @@ public class RelatorioVendaItemDTO {
     public int getQuantidadeItens() { return quantidadeItens; }
     public int getTotalCentavos() { return totalCentavos; }
     public String getStatus() { return status; }
+    public String getFormaPagamento() { return formaPagamento; }
 
     public String getTotalFormatado() {
         return String.format(Locale.GERMANY, "R$ %.2f", totalCentavos / 100.0);

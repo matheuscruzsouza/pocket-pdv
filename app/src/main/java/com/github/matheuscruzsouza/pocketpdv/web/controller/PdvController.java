@@ -468,7 +468,7 @@ public class PdvController {
             }
 
             long funcionarioId = sessaoAtiva.getUserId();
-            Venda venda = getVendaService().finalizarVenda(c, funcionarioId);
+            Venda venda = getVendaService().finalizarVenda(c, funcionarioId, formaPagamento, valorRecebidoCentavos, trocoCentavos);
             EstoqueSseHub.getInstance().notificarCarrinho(usuario, c);
             return HtmlTemplates.fragmentoCheckoutSucesso(venda, formaPagamento, valorRecebidoCentavos, trocoCentavos);
         } catch (Exception e) {

@@ -14,6 +14,7 @@ import com.github.matheuscruzsouza.pocketpdv.domain.model.Venda;
 import com.github.matheuscruzsouza.pocketpdv.persistence.DatabaseHelper;
 import com.github.matheuscruzsouza.pocketpdv.persistence.FuncionarioRepository;
 import com.github.matheuscruzsouza.pocketpdv.persistence.ItemVendaRepository;
+import com.github.matheuscruzsouza.pocketpdv.persistence.PagamentoRepository;
 import com.github.matheuscruzsouza.pocketpdv.persistence.ProdutoRepository;
 import com.github.matheuscruzsouza.pocketpdv.persistence.VendaRepository;
 import com.github.matheuscruzsouza.pocketpdv.service.PocketPdvService;
@@ -42,6 +43,9 @@ public class VendaServiceImpl implements VendaService {
     @Autowired
     private FuncionarioRepository funcionarioRepository;
 
+    @Autowired
+    private PagamentoRepository pagamentoRepository;
+
     private static final Object DB_LOCK = new Object();
 
     public VendaServiceImpl() {
@@ -51,10 +55,19 @@ public class VendaServiceImpl implements VendaService {
                             ProdutoRepository produtoRepository,
                             VendaRepository vendaRepository,
                             ItemVendaRepository itemVendaRepository) {
+        this(dbHelper, produtoRepository, vendaRepository, itemVendaRepository, null);
+    }
+
+    public VendaServiceImpl(DatabaseHelper dbHelper,
+                            ProdutoRepository produtoRepository,
+                            VendaRepository vendaRepository,
+                            ItemVendaRepository itemVendaRepository,
+                            PagamentoRepository pagamentoRepository) {
         this.dbHelper = dbHelper;
         this.produtoRepository = produtoRepository;
         this.vendaRepository = vendaRepository;
         this.itemVendaRepository = itemVendaRepository;
+        this.pagamentoRepository = pagamentoRepository;
     }
 
     private DatabaseHelper getDbHelper() {
@@ -109,6 +122,17 @@ public class VendaServiceImpl implements VendaService {
         return funcionarioRepository;
     }
 
+    private PagamentoRepository getPagamentoRepository() {
+        if (pagamentoRepository != null) return pagamentoRepository;
+        if (PocketPdvService.getInstance() != null && PocketPdvService.getInstance().getServer() != null) {
+            pagamentoRepository = (PagamentoRepository) PocketPdvService.getInstance().getServer().getBean(PagamentoRepository.class);
+        }
+        if (pagamentoRepository == null) {
+            pagamentoRepository = new PagamentoRepository(getDbHelper());
+        }
+        return pagamentoRepository;
+    }
+
     @Override
     public Venda finalizarVenda(Carrinho carrinho) {
         return finalizarVenda(carrinho, 1);
@@ -116,6 +140,24 @@ public class VendaServiceImpl implements VendaService {
 
     @Override
     public Venda finalizarVenda(Carrinho carrinho, long funcionarioId) {
+        return finalizarVenda(carrinho, funcionarioId, (List<com.github.matheuscruzsouza.pocketpdv.domain.model.Pagamento>) null);
+    }
+
+    @Override
+    public Venda finalizarVenda(Carrinho carrinho, long funcionarioId, String formaPagamento, int valorRecebidoCentavos, int trocoCentavos) {
+        int totalCentavos = (carrinho != null) ? carrinho.getTotalCentavos() : 0;
+        int valorPagamento = totalCentavos;
+        int valRec = valorRecebidoCentavos > 0 ? valorRecebidoCentavos : valorPagamento;
+        int troco = Math.max(0, trocoCentavos);
+        String tipo = (formaPagamento != null && !formaPagamento.trim().isEmpty()) ? formaPagamento : "DINHEIRO";
+
+        List<com.github.matheuscruzsouza.pocketpdv.domain.model.Pagamento> pagamentos = new ArrayList<>();
+        pagamentos.add(new com.github.matheuscruzsouza.pocketpdv.domain.model.Pagamento(tipo, valorPagamento, valRec, troco));
+        return finalizarVenda(carrinho, funcionarioId, pagamentos);
+    }
+
+    @Override
+    public Venda finalizarVenda(Carrinho carrinho, long funcionarioId, List<com.github.matheuscruzsouza.pocketpdv.domain.model.Pagamento> pagamentos) {
         if (carrinho == null || carrinho.getItens().isEmpty()) {
             throw new IllegalArgumentException("Carrinho vazio.");
         }
@@ -129,7 +171,7 @@ public class VendaServiceImpl implements VendaService {
             ));
         }
 
-        Venda venda = finalizarVenda(comandos, funcionarioId);
+        Venda venda = finalizarVenda(comandos, funcionarioId, pagamentos);
         carrinho.limpar();
         return venda;
     }
@@ -141,6 +183,11 @@ public class VendaServiceImpl implements VendaService {
 
     @Override
     public Venda finalizarVenda(List<ItemVendaComando> itens, long funcionarioId) {
+        return finalizarVenda(itens, funcionarioId, (List<com.github.matheuscruzsouza.pocketpdv.domain.model.Pagamento>) null);
+    }
+
+    @Override
+    public Venda finalizarVenda(List<ItemVendaComando> itens, long funcionarioId, List<com.github.matheuscruzsouza.pocketpdv.domain.model.Pagamento> pagamentos) {
         if (itens == null || itens.isEmpty()) {
             throw new IllegalArgumentException("Nenhum item informado para a venda.");
         }
@@ -191,6 +238,13 @@ public class VendaServiceImpl implements VendaService {
                 }
 
                 getItemVendaRepository().salvarTodos(itensVenda, db);
+
+                if (pagamentos != null && !pagamentos.isEmpty()) {
+                    for (com.github.matheuscruzsouza.pocketpdv.domain.model.Pagamento pag : pagamentos) {
+                        pag.setVendaId(vendaId);
+                    }
+                    getPagamentoRepository().salvarTodos(pagamentos, db);
+                }
 
                 db.setTransactionSuccessful();
                 venda.setId(vendaId);

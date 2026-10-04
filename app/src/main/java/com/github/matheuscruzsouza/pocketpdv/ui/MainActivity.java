@@ -853,13 +853,14 @@ public class MainActivity extends AppCompatActivity {
 
             StringBuilder csv = new StringBuilder();
             // Cabeçalho CSV
-            csv.append("ID,DataHora,Operador,QuantidadeItens,ValorTotalReais,Status\n");
+            csv.append("ID,DataHora,Operador,QuantidadeItens,FormaPagamento,ValorTotalReais,Status\n");
             for (RelatorioVendaItemDTO v : vendas) {
                 double totalReais = v.getTotalCentavos() / 100.0;
                 csv.append(v.getId()).append(",")
                    .append("\"").append(v.getDataHoraLegivel()).append("\",")
                    .append("\"").append(v.getFuncionarioNome().replace("\"", "\"\"")).append("\",")
                    .append(v.getQuantidadeItens()).append(",")
+                   .append("\"").append(v.getFormaPagamento().replace("\"", "\"\"")).append("\",")
                    .append(String.format(Locale.US, "%.2f", totalReais)).append(",")
                    .append("\"").append(v.getStatus()).append("\"\n");
             }

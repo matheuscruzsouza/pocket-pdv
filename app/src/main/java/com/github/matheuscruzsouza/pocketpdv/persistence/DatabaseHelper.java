@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "pocketpdv.db";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
 
     // DDL Statements
     public static final String SQL_CREATE_PRODUTOS =
@@ -52,6 +52,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String SQL_CREATE_IDX_ITENS_VENDA_PRODUTO_ID =
             "CREATE INDEX IF NOT EXISTS idx_itens_venda_produto_id ON itens_venda(produto_id);";
+
+    public static final String SQL_CREATE_PAGAMENTOS =
+            "CREATE TABLE IF NOT EXISTS pagamentos (" +
+            "  id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "  venda_id INTEGER NOT NULL REFERENCES vendas(id), " +
+            "  tipo TEXT NOT NULL, " +
+            "  valor_centavos INTEGER NOT NULL CHECK (valor_centavos >= 0), " +
+            "  valor_recebido_centavos INTEGER NOT NULL CHECK (valor_recebido_centavos >= 0), " +
+            "  troco_centavos INTEGER NOT NULL DEFAULT 0 CHECK (troco_centavos >= 0)" +
+            ");";
+
+    public static final String SQL_CREATE_IDX_PAGAMENTOS_VENDA_ID =
+            "CREATE INDEX IF NOT EXISTS idx_pagamentos_venda_id ON pagamentos(venda_id);";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -109,6 +122,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_IDX_ITENS_VENDA_VENDA_ID);
         db.execSQL(SQL_CREATE_IDX_ITENS_VENDA_PRODUTO_ID);
         db.execSQL(SQL_CREATE_FUNCIONARIOS);
+        db.execSQL(SQL_CREATE_PAGAMENTOS);
+        db.execSQL(SQL_CREATE_IDX_PAGAMENTOS_VENDA_ID);
 
         seedInitialData(db);
         garantirUsuariosPadrao(db);
@@ -124,7 +139,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private void aplicarMigracao(SQLiteDatabase db, int versao) {
         if (versao == 2) {
             migrarParaVersao2(db);
+        } else if (versao == 3) {
+            migrarParaVersao3(db);
         }
+    }
+
+    private void migrarParaVersao3(SQLiteDatabase db) {
+        db.execSQL(SQL_CREATE_PAGAMENTOS);
+        db.execSQL(SQL_CREATE_IDX_PAGAMENTOS_VENDA_ID);
     }
 
     private void migrarParaVersao2(SQLiteDatabase db) {

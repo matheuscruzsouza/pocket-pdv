@@ -109,10 +109,12 @@ public class VendaRepository {
         String sql = "SELECT v.id, v.data_hora, v.total_centavos, v.status, " +
                      "COALESCE(v.funcionario_id, 1) AS funcionario_id, " +
                      "COALESCE(f.nome, 'Operador') AS funcionario_nome, " +
-                     "COALESCE(SUM(iv.quantidade), 0) AS total_itens " +
+                     "COALESCE(SUM(iv.quantidade), 0) AS total_itens, " +
+                     "COALESCE(GROUP_CONCAT(DISTINCT pg.tipo), 'NÃO INFORMADO') AS forma_pagamento " +
                      "FROM vendas v " +
                      "LEFT JOIN funcionarios f ON f.id = v.funcionario_id " +
                      "LEFT JOIN itens_venda iv ON iv.venda_id = v.id " +
+                     "LEFT JOIN pagamentos pg ON pg.venda_id = v.id " +
                      "GROUP BY v.id, v.data_hora, v.total_centavos, v.status, v.funcionario_id, f.nome " +
                      "ORDER BY v.id DESC " +
                      "LIMIT ?";
@@ -127,9 +129,10 @@ public class VendaRepository {
                     long funcId = cursor.getLong(cursor.getColumnIndexOrThrow("funcionario_id"));
                     String funcNome = cursor.getString(cursor.getColumnIndexOrThrow("funcionario_nome"));
                     int totalItens = cursor.getInt(cursor.getColumnIndexOrThrow("total_itens"));
+                    String formaPagamento = cursor.getString(cursor.getColumnIndexOrThrow("forma_pagamento"));
 
                     itens.add(new RelatorioVendaItemDTO(
-                            id, dataHora, funcId, funcNome, totalItens, totalCentavos, status
+                            id, dataHora, funcId, funcNome, totalItens, totalCentavos, status, formaPagamento
                     ));
                 } while (cursor.moveToNext());
             }
