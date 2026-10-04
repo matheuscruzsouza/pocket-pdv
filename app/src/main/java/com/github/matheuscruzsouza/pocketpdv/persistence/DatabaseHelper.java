@@ -66,7 +66,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String SQL_CREATE_IDX_PAGAMENTOS_VENDA_ID =
             "CREATE INDEX IF NOT EXISTS idx_pagamentos_venda_id ON pagamentos(venda_id);";
 
-    public DatabaseHelper(Context context) {
+    private static DatabaseHelper instance;
+
+    public static synchronized DatabaseHelper getInstance(Context context) {
+        if (instance == null) {
+            instance = new DatabaseHelper(context.getApplicationContext());
+        }
+        return instance;
+    }
+
+    private DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

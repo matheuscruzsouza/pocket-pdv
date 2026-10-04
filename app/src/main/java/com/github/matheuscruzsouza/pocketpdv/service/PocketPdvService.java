@@ -92,7 +92,7 @@ public class PocketPdvService extends Service {
             Environment.init(this);
 
             // Banco de dados
-            dbHelper = new DatabaseHelper(this);
+            dbHelper = DatabaseHelper.getInstance(this);
 
             // Servidor nano-spring escaneando com.github.matheuscruzsouza.pocketpdv
             server = new Server(this, PORT, "com.github.matheuscruzsouza.pocketpdv");

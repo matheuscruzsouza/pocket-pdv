@@ -318,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (dbHelper == null) {
-            dbHelper = new DatabaseHelper(this);
+            dbHelper = DatabaseHelper.getInstance(this);
         }
         if (relatorioService == null) {
             relatorioService = new RelatorioServiceImpl(new VendaRepository(dbHelper), new ProdutoRepository(dbHelper));
