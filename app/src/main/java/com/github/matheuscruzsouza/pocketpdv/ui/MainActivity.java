@@ -734,7 +734,20 @@ public class MainActivity extends AppCompatActivity {
         int porta = PocketPdvService.PORT;
 
         tvServerHeaderSubtitle.setText(String.format("http://pocketpdv.local:%d", porta));
-        tvServidorStatus.setText(String.format("Status: Ativo e Escutando na Porta %d", porta));
+        switch (PocketPdvService.getState()) {
+            case RUNNING:
+                tvServidorStatus.setText(String.format("Status: Ativo e Escutando na Porta %d", porta));
+                break;
+            case STARTING:
+                tvServidorStatus.setText("Status: Iniciando...");
+                break;
+            case FAILED:
+                tvServidorStatus.setText("Status: Falha ao iniciar - " + PocketPdvService.getLastError());
+                break;
+            default:
+                tvServidorStatus.setText("Status: Parado");
+                break;
+        }
         tvServidorUrlLocal.setText(String.format("IP Local: http://%s:%d", ip, porta));
         tvServidorUrlMdns.setText(String.format("Hostname mDNS: http://pocketpdv.local:%d", porta));
         if (tvSwaggerUrl != null) {

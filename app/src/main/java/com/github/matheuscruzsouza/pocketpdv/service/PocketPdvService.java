@@ -42,6 +42,17 @@ public class PocketPdvService extends Service {
         return instance;
     }
 
+    private static volatile ServerState state = ServerState.STOPPED;
+    private static volatile String lastError;
+
+    public static ServerState getState() {
+        return state;
+    }
+
+    public static String getLastError() {
+        return lastError;
+    }
+
     public static Context getAppContext() {
         return instance != null ? instance.getApplicationContext() : null;
     }
@@ -71,6 +82,8 @@ public class PocketPdvService extends Service {
     public void onCreate() {
         super.onCreate();
         instance = this;
+        state = ServerState.STARTING;
+        lastError = null;
         startForegroundNotification();
         acquireLocks();
 
@@ -91,15 +104,22 @@ public class PocketPdvService extends Service {
             server.registerSingleton(SQLiteDatabase.class, dbHelper.getWritableDatabase());
             server.registerSingleton(SessionService.class, sessionService);
 
+            state = ServerState.RUNNING;
             Log.i(TAG, "NanoSpring Server rodando na porta " + PORT);
 
         } catch (Exception e) {
+            state = ServerState.FAILED;
+            lastError = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
             Log.e(TAG, "Erro na inicialização do servidor: " + e.getMessage(), e);
         }
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (state == ServerState.FAILED) {
+            stopSelf();
+            return START_NOT_STICKY;
+        }
         return START_STICKY;
     }
 
@@ -120,6 +140,9 @@ public class PocketPdvService extends Service {
         } catch (Exception ignored) {}
         if (dbHelper != null) {
             dbHelper.close();
+        }
+        if (state != ServerState.FAILED) {
+            state = ServerState.STOPPED;
         }
         instance = null;
     }
