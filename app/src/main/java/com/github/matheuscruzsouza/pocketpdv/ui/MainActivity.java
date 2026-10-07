@@ -721,6 +721,74 @@ public class MainActivity extends AppCompatActivity {
                     containerDesempenhoFuncionarios.addView(divider);
                 }
             }
+
+            // 3. Turnos de Caixa
+            LinearLayout containerCaixas = findViewById(R.id.containerCaixas);
+            if (containerCaixas != null) {
+                containerCaixas.removeAllViews();
+                com.github.matheuscruzsouza.pocketpdv.persistence.CaixaRepository caixaRepo = null;
+                if (PocketPdvService.getInstance() != null && PocketPdvService.getInstance().getServer() != null) {
+                    caixaRepo = (com.github.matheuscruzsouza.pocketpdv.persistence.CaixaRepository) PocketPdvService.getInstance().getServer().getBean(com.github.matheuscruzsouza.pocketpdv.persistence.CaixaRepository.class);
+                }
+                if (caixaRepo == null) {
+                    com.github.matheuscruzsouza.pocketpdv.persistence.DatabaseHelper dbH = DatabaseHelper.getInstance(this);
+                    caixaRepo = new com.github.matheuscruzsouza.pocketpdv.persistence.CaixaRepository(dbH);
+                }
+
+                List<com.github.matheuscruzsouza.pocketpdv.domain.model.CaixaTurno> ultimosTurnos = caixaRepo.listarRecentes(10);
+                if (ultimosTurnos.isEmpty()) {
+                    TextView tvVazio = new TextView(this);
+                    tvVazio.setText("Nenhum turno de caixa registrado.");
+                    tvVazio.setTextColor(Color.parseColor("#9CA3AF"));
+                    tvVazio.setPadding(0, 10, 0, 10);
+                    containerCaixas.addView(tvVazio);
+                } else {
+                    for (com.github.matheuscruzsouza.pocketpdv.domain.model.CaixaTurno ct : ultimosTurnos) {
+                        View row = inflater.inflate(R.layout.item_caixa_turno, containerCaixas, false);
+                        TextView tvData = row.findViewById(R.id.tv_caixa_data_abertura);
+                        TextView tvStatus = row.findViewById(R.id.tv_caixa_status);
+                        TextView tvOp = row.findViewById(R.id.tv_caixa_operador);
+                        TextView tvFechamento = row.findViewById(R.id.tv_caixa_fechamento);
+                        TextView tvQuebra = row.findViewById(R.id.tv_caixa_quebra);
+
+                        Funcionario f = funcionarioRepository.buscarPorId(ct.getFuncionarioId());
+                        String nomeOp = f != null ? f.getNome() : ("Op #" + ct.getFuncionarioId());
+
+                        tvData.setText("Turno #" + ct.getId() + " - Abertura: " + formatarDataAmigavel(ct.getDataAbertura()));
+                        tvOp.setText("Operador: " + nomeOp + " | Fundo Inicial: " + com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(ct.getValorTrocoInicialCentavos()));
+
+                        if ("ABERTO".equals(ct.getStatus())) {
+                            tvStatus.setText("ABERTO");
+                            tvStatus.setBackgroundColor(Color.parseColor("#10B981")); // verde
+                            tvFechamento.setVisibility(View.GONE);
+                            tvQuebra.setVisibility(View.GONE);
+                        } else {
+                            tvStatus.setText("FECHADO");
+                            tvStatus.setBackgroundColor(Color.parseColor("#6B7280")); // cinza
+                            tvFechamento.setVisibility(View.VISIBLE);
+                            tvFechamento.setText("Fechado em " + formatarDataAmigavel(ct.getDataFechamento()) + " | Valor Físico Declarado: " + com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(ct.getValorFechamentoCentavos()));
+                            
+                            long sistema = ct.getValorTotalSistemaCentavos();
+                            long declarado = ct.getValorFechamentoCentavos();
+                            long diferenca = declarado - sistema;
+                            
+                            tvQuebra.setVisibility(View.VISIBLE);
+                            if (diferenca < 0) {
+                                tvQuebra.setText("Falta no caixa: " + com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(Math.abs(diferenca)));
+                                tvQuebra.setTextColor(Color.parseColor("#B91C1C")); // vermelho
+                            } else if (diferenca > 0) {
+                                tvQuebra.setText("Sobra no caixa: " + com.github.matheuscruzsouza.pocketpdv.util.MoneyParser.formatarDinheiro(diferenca));
+                                tvQuebra.setTextColor(Color.parseColor("#D97706")); // laranja
+                            } else {
+                                tvQuebra.setText("Caixa exato.");
+                                tvQuebra.setTextColor(Color.parseColor("#059669")); // verde
+                            }
+                        }
+
+                        containerCaixas.addView(row);
+                    }
+                }
+            }
         } catch (Exception e) {
             Toast.makeText(this, "Erro ao carregar relatórios: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }

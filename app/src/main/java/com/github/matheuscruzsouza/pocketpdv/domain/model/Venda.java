@@ -10,6 +10,7 @@ public class Venda {
     private long totalCentavos;
     private String status; // 'CONCLUIDA' ou 'CANCEL'
     private long funcionarioId = 1;
+    private Long caixaTurnoId = null;
     private final List<ItemVenda> itens = new ArrayList<>();
 
     public Venda() {
@@ -27,6 +28,15 @@ public class Venda {
         this.funcionarioId = funcionarioId > 0 ? funcionarioId : 1;
     }
 
+    public Venda(long id, String dataHora, long totalCentavos, String status, long funcionarioId, Long caixaTurnoId) {
+        this.id = id;
+        this.dataHora = dataHora;
+        this.totalCentavos = totalCentavos;
+        this.status = status;
+        this.funcionarioId = funcionarioId > 0 ? funcionarioId : 1;
+        this.caixaTurnoId = caixaTurnoId;
+    }
+
     public long getId() { return id; }
     public void setId(long id) { this.id = id; }
 
@@ -41,6 +51,9 @@ public class Venda {
 
     public long getFuncionarioId() { return funcionarioId; }
     public void setFuncionarioId(long funcionarioId) { this.funcionarioId = funcionarioId; }
+
+    public Long getCaixaTurnoId() { return caixaTurnoId; }
+    public void setCaixaTurnoId(Long caixaTurnoId) { this.caixaTurnoId = caixaTurnoId; }
 
     public List<ItemVenda> getItens() { return itens; }
 

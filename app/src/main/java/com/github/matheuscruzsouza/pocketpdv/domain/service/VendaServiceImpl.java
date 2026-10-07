@@ -186,6 +186,18 @@ public class VendaServiceImpl implements VendaService {
         return finalizarVenda(itens, funcionarioId, (List<com.github.matheuscruzsouza.pocketpdv.domain.model.Pagamento>) null);
     }
 
+    private com.github.matheuscruzsouza.pocketpdv.domain.service.CaixaService getCaixaService() {
+        if (PocketPdvService.getInstance() != null && PocketPdvService.getInstance().getServer() != null) {
+            return (com.github.matheuscruzsouza.pocketpdv.domain.service.CaixaService) PocketPdvService.getInstance().getServer().getBean(com.github.matheuscruzsouza.pocketpdv.domain.service.CaixaServiceImpl.class);
+        }
+        // Fallback for tests if needed
+        return new com.github.matheuscruzsouza.pocketpdv.domain.service.CaixaServiceImpl(
+                new com.github.matheuscruzsouza.pocketpdv.persistence.CaixaRepository(getDbHelper()),
+                new com.github.matheuscruzsouza.pocketpdv.persistence.MovimentacaoRepository(getDbHelper()),
+                getDbHelper()
+        );
+    }
+
     @Override
     public Venda finalizarVenda(List<ItemVendaComando> itens, long funcionarioId, List<com.github.matheuscruzsouza.pocketpdv.domain.model.Pagamento> pagamentos) {
         if (itens == null || itens.isEmpty()) {
@@ -196,6 +208,13 @@ public class VendaServiceImpl implements VendaService {
             SQLiteDatabase db = getDbHelper().getWritableDatabase();
             db.beginTransaction();
             try {
+                long finalFuncId = funcionarioId > 0 ? funcionarioId : 1;
+                com.github.matheuscruzsouza.pocketpdv.domain.service.CaixaService caixaService = getCaixaService();
+                com.github.matheuscruzsouza.pocketpdv.domain.model.CaixaTurno caixaAtivo = caixaService.obterCaixaAberto(finalFuncId);
+                if (caixaAtivo == null) {
+                    throw new IllegalStateException("Caixa fechado. Abra o caixa primeiro.");
+                }
+
                 long totalCentavos = 0;
                 List<ItemVenda> itensVenda = new ArrayList<>();
 
@@ -229,8 +248,7 @@ public class VendaServiceImpl implements VendaService {
                 SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
                 String dataHora = isoFormat.format(new Date());
 
-                long finalFuncId = funcionarioId > 0 ? funcionarioId : 1;
-                Venda venda = new Venda(0, dataHora, totalCentavos, "CONCLUIDA", finalFuncId);
+                Venda venda = new Venda(0, dataHora, totalCentavos, "CONCLUIDA", finalFuncId, caixaAtivo.getId());
                 long vendaId = getVendaRepository().salvar(venda, db);
 
                 for (ItemVenda iv : itensVenda) {
@@ -245,6 +263,13 @@ public class VendaServiceImpl implements VendaService {
                     }
                     getPagamentoRepository().salvarTodos(pagamentos, db);
                 }
+
+                // Gerar movimentação de caixa
+                com.github.matheuscruzsouza.pocketpdv.persistence.MovimentacaoRepository movRepo = new com.github.matheuscruzsouza.pocketpdv.persistence.MovimentacaoRepository(getDbHelper());
+                String pagDesc = (pagamentos != null && !pagamentos.isEmpty()) ? pagamentos.get(0).getTipo() : "DINHEIRO";
+                com.github.matheuscruzsouza.pocketpdv.domain.model.MovimentacaoCaixa mov = new com.github.matheuscruzsouza.pocketpdv.domain.model.MovimentacaoCaixa(
+                        0, caixaAtivo.getId(), "VENDA", totalCentavos, "Venda #" + vendaId + " (" + pagDesc + ")", dataHora);
+                movRepo.salvar(mov, db);
 
                 db.setTransactionSuccessful();
                 venda.setId(vendaId);

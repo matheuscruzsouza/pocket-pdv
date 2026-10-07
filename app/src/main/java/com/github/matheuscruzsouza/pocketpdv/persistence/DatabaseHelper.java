@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "pocketpdv.db";
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
 
     // DDL Statements
     public static final String SQL_CREATE_PRODUTOS =
@@ -29,7 +29,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "  data_hora TEXT NOT NULL, " +
             "  total_centavos INTEGER NOT NULL CHECK (total_centavos >= 0), " +
             "  status TEXT NOT NULL, " +
-            "  funcionario_id INTEGER DEFAULT 1 REFERENCES funcionarios(id)" +
+            "  funcionario_id INTEGER DEFAULT 1 REFERENCES funcionarios(id), " +
+            "  caixa_turno_id INTEGER REFERENCES caixa_turno(id)" +
             ");";
 
     public static final String SQL_CREATE_IDX_VENDAS_DATA =
@@ -37,6 +38,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String SQL_CREATE_IDX_VENDAS_FUNC =
             "CREATE INDEX IF NOT EXISTS idx_vendas_funcionario_id ON vendas(funcionario_id);";
+
+    public static final String SQL_CREATE_CAIXA_TURNO =
+            "CREATE TABLE IF NOT EXISTS caixa_turno (" +
+            "  id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "  funcionario_id INTEGER NOT NULL REFERENCES funcionarios(id), " +
+            "  data_abertura TEXT NOT NULL, " +
+            "  data_fechamento TEXT, " +
+            "  valor_abertura_centavos INTEGER NOT NULL CHECK (valor_abertura_centavos >= 0), " +
+            "  valor_fechamento_declarado_centavos INTEGER, " +
+            "  status TEXT NOT NULL" +
+            ");";
+
+    public static final String SQL_CREATE_MOVIMENTACAO_CAIXA =
+            "CREATE TABLE IF NOT EXISTS movimentacao_caixa (" +
+            "  id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "  caixa_turno_id INTEGER NOT NULL REFERENCES caixa_turno(id), " +
+            "  tipo TEXT NOT NULL, " +
+            "  valor_centavos INTEGER NOT NULL, " +
+            "  descricao TEXT, " +
+            "  data_hora TEXT NOT NULL" +
+            ");";
+
+    public static final String SQL_CREATE_IDX_CAIXA_FUNC =
+            "CREATE INDEX IF NOT EXISTS idx_caixa_turno_funcionario ON caixa_turno(funcionario_id);";
 
     public static final String SQL_CREATE_ITENS_VENDA =
             "CREATE TABLE IF NOT EXISTS itens_venda (" +
@@ -124,6 +149,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_PRODUTOS);
         db.execSQL(SQL_CREATE_IDX_PRODUTOS_CODIGO);
+        db.execSQL(SQL_CREATE_CAIXA_TURNO);
+        db.execSQL(SQL_CREATE_MOVIMENTACAO_CAIXA);
+        db.execSQL(SQL_CREATE_IDX_CAIXA_FUNC);
         db.execSQL(SQL_CREATE_VENDAS);
         db.execSQL(SQL_CREATE_IDX_VENDAS_DATA);
         db.execSQL(SQL_CREATE_IDX_VENDAS_FUNC);
@@ -150,6 +178,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             migrarParaVersao2(db);
         } else if (versao == 3) {
             migrarParaVersao3(db);
+        } else if (versao == 4) {
+            migrarParaVersao4(db);
+        }
+    }
+
+    private void migrarParaVersao4(SQLiteDatabase db) {
+        db.execSQL(SQL_CREATE_CAIXA_TURNO);
+        db.execSQL(SQL_CREATE_MOVIMENTACAO_CAIXA);
+        db.execSQL(SQL_CREATE_IDX_CAIXA_FUNC);
+        if (!colunaExiste(db, "vendas", "caixa_turno_id")) {
+            db.execSQL("ALTER TABLE vendas ADD COLUMN caixa_turno_id INTEGER REFERENCES caixa_turno(id);");
         }
     }
 

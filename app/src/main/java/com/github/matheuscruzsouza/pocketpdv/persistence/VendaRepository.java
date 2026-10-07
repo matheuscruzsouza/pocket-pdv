@@ -50,6 +50,9 @@ public class VendaRepository {
         values.put("total_centavos", venda.getTotalCentavos());
         values.put("status", venda.getStatus());
         values.put("funcionario_id", venda.getFuncionarioId() > 0 ? venda.getFuncionarioId() : 1);
+        if (venda.getCaixaTurnoId() != null) {
+            values.put("caixa_turno_id", venda.getCaixaTurnoId());
+        }
 
         long id = db.insert("vendas", null, values);
         venda.setId(id);
@@ -204,6 +207,12 @@ public class VendaRepository {
             funcId = cursor.getLong(funcColIdx);
         }
 
-        return new Venda(id, dataHora, totalCentavos, status, funcId);
+        Long caixaId = null;
+        int caixaColIdx = cursor.getColumnIndex("caixa_turno_id");
+        if (caixaColIdx >= 0 && !cursor.isNull(caixaColIdx)) {
+            caixaId = cursor.getLong(caixaColIdx);
+        }
+
+        return new Venda(id, dataHora, totalCentavos, status, funcId, caixaId);
     }
 }

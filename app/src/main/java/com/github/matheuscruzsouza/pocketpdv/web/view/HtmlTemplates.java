@@ -112,6 +112,69 @@ public class HtmlTemplates {
         return mav;
     }
 
+    public static String paginaPdvCaixaFechado(Funcionario operador) {
+        String nomeOperador = (operador != null && operador.getNome() != null) ? operador.getNome() : "Carlos Silva";
+        return "<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>PocketPDV - Caixa Fechado</title><link rel=\"stylesheet\" href=\"/assets/style.css\"><script src=\"/assets/htmx.min.js\"></script></head><body style=\"background-color:#f3f4f6;\">" +
+               "<div class=\"container\">" +
+               "<header class=\"header\">" +
+               "<div style=\"display: flex; align-items: center; gap: 0.5rem;\"><span class=\"brand\">PocketPDV</span><span class=\"badge\" style=\"margin-left: 0.5rem; background: #e0e7ff; color: #3730a3;\">👤 " + nomeOperador + "</span></div>" +
+               "<div style=\"display: flex; gap: 0.75rem; align-items: center;\"><form method=\"post\" action=\"/logout\" style=\"margin: 0;\"><button type=\"submit\" style=\"background: none; border: none; padding: 0; cursor: pointer; color: #6b7280; font-size: 0.875rem;\">Encerrar Sessão</button></form></div>" +
+               "</header>" +
+               "<div style=\"display: flex; justify-content: center; align-items: center; min-height: 70vh;\">" +
+               "<div class=\"card\" style=\"text-align: center; max-width: 400px; padding: 3rem 2rem;\">" +
+               "  <h2 style=\"color: #b91c1c; margin-bottom: 1rem;\">🔒 Caixa Fechado</h2>" +
+               "  <p style=\"color: #4b5563; margin-bottom: 2rem;\">Você precisa abrir o caixa para iniciar as vendas do dia.</p>" +
+               "  <button class=\"btn btn-primary\" style=\"width: 100%; font-size: 1.1rem; padding: 0.75rem;\" hx-get=\"/caixa/modal-abrir\" hx-target=\"#modal-container\">Abrir Caixa</button>" +
+               "</div>" +
+               "</div>" +
+               "</div>" +
+               "<div id=\"modal-container\"></div>" +
+               "<script>function fecharModal() { var c = document.getElementById('modal-container'); if(c) c.innerHTML = ''; }</script>" +
+               "</body></html>";
+    }
+
+    public static String fragmentoModalAberturaCaixa(String erro) {
+        String msgErro = (erro != null) ? "<div style=\"color:red; margin-bottom:1rem;\">" + erro + "</div>" : "";
+        return "<div class=\"modal\" id=\"modal-caixa\" onclick=\"if(event.target===this) fecharModal()\"><div class=\"modal-content\" style=\"max-width:350px;\">" +
+               "<div class=\"modal-header\"><h3 class=\"modal-title\">Abrir Caixa</h3><button class=\"modal-close\" onclick=\"fecharModal()\">&times;</button></div>" +
+               msgErro +
+               "<form hx-post=\"/caixa/abrir\" hx-target=\"#modal-container\">" +
+               "<div class=\"form-group\"><label class=\"form-label\">Troco Inicial na Gaveta (R$)</label>" +
+               "<input type=\"number\" step=\"0.01\" name=\"trocoInicial\" class=\"form-input\" required placeholder=\"Ex: 100.00\" autofocus></div>" +
+               "<button type=\"submit\" class=\"btn btn-primary\" style=\"width:100%;\">Confirmar Abertura</button>" +
+               "</form></div></div>";
+    }
+
+    public static String fragmentoModalFechamentoCaixa(String erro) {
+        String msgErro = (erro != null) ? "<div style=\"color:red; margin-bottom:1rem;\">" + erro + "</div>" : "";
+        return "<div class=\"modal\" id=\"modal-caixa\" onclick=\"if(event.target===this) fecharModal()\"><div class=\"modal-content\" style=\"max-width:350px;\">" +
+               "<div class=\"modal-header\"><h3 class=\"modal-title\">Fechar Caixa</h3><button class=\"modal-close\" onclick=\"fecharModal()\">&times;</button></div>" +
+               msgErro +
+               "<form hx-post=\"/caixa/fechar\" hx-target=\"#modal-container\">" +
+               "<p style=\"color:#4b5563; font-size:0.9rem; margin-bottom:1rem;\">Conte o dinheiro da gaveta e informe o total físico.</p>" +
+               "<div class=\"form-group\"><label class=\"form-label\">Valor Físico Declarado (R$)</label>" +
+               "<input type=\"number\" step=\"0.01\" name=\"valorDeclarado\" class=\"form-input\" required placeholder=\"Ex: 150.00\" autofocus></div>" +
+               "<button type=\"submit\" class=\"btn btn-danger\" style=\"width:100%;\">Encerrar Turno</button>" +
+               "</form></div></div>";
+    }
+
+    public static String fragmentoModalMovimentacaoCaixa(String tipo, String erro) {
+        String msgErro = (erro != null) ? "<div style=\"color:red; margin-bottom:1rem;\">" + erro + "</div>" : "";
+        String cor = "SANGRIA".equals(tipo) ? "btn-danger" : "btn-primary";
+        String titulo = "SANGRIA".equals(tipo) ? "Retirada de Dinheiro (Sangria)" : "Entrada de Troco (Suprimento)";
+        return "<div class=\"modal\" id=\"modal-caixa\" onclick=\"if(event.target===this) fecharModal()\"><div class=\"modal-content\" style=\"max-width:350px;\">" +
+               "<div class=\"modal-header\"><h3 class=\"modal-title\">" + titulo + "</h3><button class=\"modal-close\" onclick=\"fecharModal()\">&times;</button></div>" +
+               msgErro +
+               "<form hx-post=\"/caixa/movimentacao\" hx-target=\"#modal-container\">" +
+               "<input type=\"hidden\" name=\"tipo\" value=\"" + tipo + "\">" +
+               "<div class=\"form-group\"><label class=\"form-label\">Valor (R$)</label>" +
+               "<input type=\"number\" step=\"0.01\" name=\"valor\" class=\"form-input\" required placeholder=\"Ex: 50.00\" autofocus></div>" +
+               "<div class=\"form-group\"><label class=\"form-label\">Motivo/Descrição</label>" +
+               "<input type=\"text\" name=\"descricao\" class=\"form-input\" required placeholder=\"Motivo da operação\"></div>" +
+               "<button type=\"submit\" class=\"btn " + cor + "\" style=\"width:100%;\">Confirmar Operação</button>" +
+               "</form></div></div>";
+    }
+
     public static ModelAndView paginaDisplayCliente(List<Funcionario> caixas, String caixaParam) {
         ModelAndView mav = new ModelAndView("display");
         mav.addObject("caixas", caixas != null ? caixas : java.util.Collections.emptyList());
@@ -204,10 +267,14 @@ public class HtmlTemplates {
     }
 
     public static String fragmentoCheckoutSucesso(Venda venda, String formaPagamento) {
-        return fragmentoCheckoutSucesso(venda, formaPagamento, venda != null ? venda.getTotalCentavos() : 0L, 0L);
+        return fragmentoCheckoutSucesso(venda, formaPagamento, venda != null ? venda.getTotalCentavos() : 0L, 0L, java.util.Collections.emptyList());
     }
 
     public static String fragmentoCheckoutSucesso(Venda venda, String formaPagamento, long valorRecebidoCentavos, long trocoCentavos) {
+        return fragmentoCheckoutSucesso(venda, formaPagamento, valorRecebidoCentavos, trocoCentavos, java.util.Collections.emptyList());
+    }
+
+    public static String fragmentoCheckoutSucesso(Venda venda, String formaPagamento, long valorRecebidoCentavos, long trocoCentavos, List<Produto> atualizados) {
         String formaEscapada = com.github.matheuscruzsouza.pocketpdv.util.HtmlEscaper.escape(formaPagamento);
         String dataHoraEscapada = com.github.matheuscruzsouza.pocketpdv.util.HtmlEscaper.escape(venda != null ? venda.getDataHora() : "");
         long vendaId = venda != null ? venda.getId() : 0;
@@ -225,16 +292,46 @@ public class HtmlTemplates {
         }
         detalhePagamento.append(" &bull; Horário: ").append(dataHoraEscapada);
 
+        StringBuilder jsUpdates = new StringBuilder();
+        if (atualizados != null) {
+            for (Produto p : atualizados) {
+                jsUpdates.append("  var el").append(p.getId()).append(" = document.getElementById('estoque-prod-").append(p.getId()).append("');\n");
+                jsUpdates.append("  var btn").append(p.getId()).append(" = document.getElementById('btn-add-prod-").append(p.getId()).append("');\n");
+                jsUpdates.append("  if(el").append(p.getId()).append(") { ");
+                if (p.getEstoque() <= 0) {
+                    jsUpdates.append("el").append(p.getId()).append(".innerText = '0 un (Esgotado)'; el").append(p.getId()).append(".style.background = '#fee2e2'; el").append(p.getId()).append(".style.color = '#b91c1c';");
+                } else if (p.getEstoque() <= 5) {
+                    jsUpdates.append("el").append(p.getId()).append(".innerText = '").append(p.getEstoque()).append(" un'; el").append(p.getId()).append(".style.background = '#fee2e2'; el").append(p.getId()).append(".style.color = '#b91c1c';");
+                } else {
+                    jsUpdates.append("el").append(p.getId()).append(".innerText = '").append(p.getEstoque()).append(" un'; el").append(p.getId()).append(".style.background = '#e5e7eb'; el").append(p.getId()).append(".style.color = '#374151';");
+                }
+                jsUpdates.append(" }\n");
+                jsUpdates.append("  if(btn").append(p.getId()).append(") { ");
+                if (p.getEstoque() <= 0) {
+                    jsUpdates.append("btn").append(p.getId()).append(".disabled = true; btn").append(p.getId()).append(".innerText = 'Esgotado'; btn").append(p.getId()).append(".className = 'btn btn-secondary'; btn").append(p.getId()).append(".style.opacity = '0.5'; btn").append(p.getId()).append(".style.cursor = 'not-allowed';");
+                } else {
+                    jsUpdates.append("btn").append(p.getId()).append(".disabled = false; btn").append(p.getId()).append(".innerText = '+ Adicionar'; btn").append(p.getId()).append(".className = 'btn btn-primary'; btn").append(p.getId()).append(".style.opacity = '1'; btn").append(p.getId()).append(".style.cursor = 'pointer';");
+                }
+                jsUpdates.append(" }\n");
+            }
+        }
+
         return "<div style=\"background: #d1fae5; color: #065f46; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; border: 1px solid #a7f3d0;\">\n" +
                 "  <div class=\"font-bold\" style=\"font-size: 1.1rem;\">✅ Venda #" + vendaId + " finalizada com sucesso!</div>\n" +
                 "  <div style=\"margin-top: 0.25rem;\">" + detalhePagamento + "</div>\n" +
                 "</div>\n" +
-                "<tbody id=\"cart-table-body\" hx-swap-oob=\"true\">\n" +
-                "  <tr><td colspan=\"5\" class=\"text-center\" style=\"color: #9ca3af; padding: 2rem;\">Carrinho vazio</td></tr>\n" +
-                "</tbody>\n" +
-                "<div id=\"cart-total\" hx-swap-oob=\"true\" class=\"cart-total-val\">R$ 0,00</div>\n" +
-                "<button id=\"btn-checkout\" hx-swap-oob=\"true\" class=\"btn btn-checkout\" onclick=\"abrirCheckout()\" disabled style=\"opacity: 0.5; cursor: not-allowed;\">Finalizar Venda</button>\n" +
-                "<input type=\"text\" name=\"codigo\" id=\"input-codigo-barras\" hx-swap-oob=\"true\" class=\"form-input\" style=\"flex: 1; min-width: 220px; font-family: monospace; font-size: 1.1rem; font-weight: bold;\" placeholder=\"Bipe ou digite o código de barras (Enter)...\" autofocus autocomplete=\"off\" value=\"\">\n";
+                "<script>\n" +
+                "  if(typeof fecharModal === 'function') fecharModal();\n" +
+                "  var tbody = document.getElementById('cart-table-body');\n" +
+                "  if(tbody) tbody.innerHTML = '<tr><td colspan=\"5\" class=\"text-center\" style=\"color: #9ca3af; padding: 2rem;\">Carrinho vazio</td></tr>';\n" +
+                "  var cTot = document.getElementById('cart-total');\n" +
+                "  if(cTot) cTot.innerText = 'R$ 0,00';\n" +
+                "  var bChk = document.getElementById('btn-checkout');\n" +
+                "  if(bChk) { bChk.disabled = true; bChk.style.opacity = '0.5'; bChk.style.cursor = 'not-allowed'; }\n" +
+                "  var inp = document.getElementById('input-codigo-barras');\n" +
+                "  if(inp) { inp.value = ''; inp.focus(); }\n" +
+                jsUpdates.toString() +
+                "</script>\n";
     }
 
     public static String fragmentoCheckoutErro(String erro) {
@@ -242,6 +339,9 @@ public class HtmlTemplates {
         return "<div style=\"background: #fee2e2; color: #b91c1c; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; border: 1px solid #fca5a5;\">\n" +
                 "  <div class=\"font-bold\">❌ Erro ao finalizar venda</div>\n" +
                 "  <div>" + erroEscapado + "</div>\n" +
-                "</div>";
+                "</div>\n" +
+                "<script>\n" +
+                "  if(typeof fecharModal === 'function') fecharModal();\n" +
+                "</script>\n";
     }
 }

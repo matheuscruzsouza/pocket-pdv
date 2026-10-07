@@ -162,6 +162,20 @@ public class PdvController {
         if (getFuncionarioRepository() != null) {
             op = getFuncionarioRepository().buscarPorUsuario(usuario);
         }
+
+        // Verifica se há caixa aberto
+        com.github.matheuscruzsouza.pocketpdv.domain.model.CaixaTurno caixaAtivo = null;
+        if (PocketPdvService.getInstance() != null && PocketPdvService.getInstance().getServer() != null) {
+            com.github.matheuscruzsouza.pocketpdv.domain.service.CaixaService caixaService = 
+                (com.github.matheuscruzsouza.pocketpdv.domain.service.CaixaService) PocketPdvService.getInstance().getServer().getBean(com.github.matheuscruzsouza.pocketpdv.domain.service.CaixaServiceImpl.class);
+            caixaAtivo = caixaService.obterCaixaAberto(sessaoAtiva.getUserId());
+        }
+
+        if (caixaAtivo == null) {
+            // Renderiza tela de bloqueio
+            return HtmlTemplates.paginaPdvCaixaFechado(op);
+        }
+
         Carrinho c = getCarrinho(sessaoAtiva);
         return HtmlTemplates.paginaPdv(
                 getEstoqueService() != null ? getEstoqueService().listarCatalogo() : java.util.Collections.emptyList(),
@@ -465,10 +479,24 @@ public class PdvController {
                 trocoCentavos = 0L;
             }
 
+            List<Long> pIds = new java.util.ArrayList<>();
+            for (com.github.matheuscruzsouza.pocketpdv.domain.model.ItemCarrinho ic : c.getItens()) {
+                pIds.add(ic.getProduto().getId());
+            }
+
             long funcionarioId = sessaoAtiva.getUserId();
             Venda venda = getVendaService().finalizarVenda(c, funcionarioId, formaPagamento, valorRecebidoCentavos, trocoCentavos);
             EstoqueSseHub.getInstance().notificarCarrinho(usuario, c);
-            return HtmlTemplates.fragmentoCheckoutSucesso(venda, formaPagamento, valorRecebidoCentavos, trocoCentavos);
+            
+            List<Produto> atualizados = new java.util.ArrayList<>();
+            if (getEstoqueService() != null) {
+                for (Long pid : pIds) {
+                    Produto p = getEstoqueService().buscarPorId(pid);
+                    if (p != null) atualizados.add(p);
+                }
+            }
+            
+            return HtmlTemplates.fragmentoCheckoutSucesso(venda, formaPagamento, valorRecebidoCentavos, trocoCentavos, atualizados);
         } catch (Exception e) {
             return HtmlTemplates.fragmentoCheckoutErro(e.getMessage());
         }
